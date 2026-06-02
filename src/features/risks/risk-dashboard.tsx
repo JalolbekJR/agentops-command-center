@@ -12,8 +12,8 @@ export function RiskDashboard() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Risk review"
-        title="Prioritize unsafe automation, policy, and QA findings."
-        description="Each finding has severity, evidence, owner, and mitigation context."
+        title="Prioritize unsafe automation and policy findings."
+        description="Severity, evidence, owner, and mitigation context stay close enough to act without making every item feel urgent."
       />
       <SectionCard
         title="Risk findings"
@@ -22,23 +22,23 @@ export function RiskDashboard() {
       >
         <div className="grid gap-4 lg:grid-cols-3">
           {mockRisks.map((risk) => (
-            <article key={risk.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+            <article key={risk.id} className="data-card">
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-semibold text-white">{risk.title}</p>
-                  <p className="mt-1 text-xs text-slate-500">{titleCase(risk.category)}</p>
+                  <p className="subtle-copy mt-1 text-xs">{titleCase(risk.category)}</p>
                 </div>
                 <RiskBadge riskLevel={risk.severity} />
               </div>
-              <p className="mt-4 text-sm leading-6 text-slate-400">{risk.description}</p>
-              <div className="mt-4 rounded-md border border-white/10 bg-slate-950/50 p-3">
-                <p className="text-xs font-semibold uppercase text-slate-500">Evidence</p>
+              <p className="muted-copy mt-4 text-sm">{risk.description}</p>
+              <div className="data-card-muted mt-4 p-3">
+                <p className="meta-label">Evidence</p>
                 <p className="mt-2 text-sm leading-6 text-slate-300">{risk.evidenceSummary}</p>
               </div>
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="subtle-copy mt-4 text-xs">
                 Owner: {risk.ownerRole}. Created {formatDateTime(risk.createdAt)}.
               </p>
-              <p className="mt-3 text-sm leading-6 text-slate-400">{risk.recommendedMitigation}</p>
+              <p className="muted-copy mt-3 text-sm">{risk.recommendedMitigation}</p>
             </article>
           ))}
         </div>

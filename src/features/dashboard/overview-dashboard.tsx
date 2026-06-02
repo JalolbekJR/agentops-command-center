@@ -30,10 +30,10 @@ export function OverviewDashboard() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Command overview"
-        title="Control agent workflows before they touch customers."
-        description="Trace runs, approvals, evaluations, risks, QA evidence, and audit activity from one operations shell."
+        title="Operational health for governed agent workflows."
+        description="Runs, approvals, evaluations, risks, QA evidence, and audit signals stay visible without turning the workspace into noise."
         action={
-          <Link href="/runs" className="inline-flex w-full justify-center rounded-md bg-white/[0.07] px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/[0.1] focus:outline-none focus:ring-2 focus:ring-slate-400/40 sm:w-auto">
+          <Link href="/runs" className="primary-action focus-ring w-full sm:w-auto">
             Inspect run timeline
           </Link>
         }
@@ -51,15 +51,15 @@ export function OverviewDashboard() {
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-        <SectionCard title="Recent workflow runs" description="Operational run history with statuses, trace IDs, and short reviewer summaries.">
+        <SectionCard title="Recent workflow runs" description="Traceable runs with status, reviewer context, and correlation IDs.">
           <div className="space-y-3">
             {mockRuns.slice(0, 4).map((run) => (
-              <Link key={run.id} href="/runs" className="block rounded-md bg-white/[0.035] p-4 transition hover:bg-white/[0.055] focus:outline-none focus:ring-2 focus:ring-slate-400/30">
+              <Link key={run.id} href="/runs" className="data-row-link focus-ring p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold text-white">{run.id}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">{run.summary}</p>
-                    <p className="mt-2 text-xs text-slate-500">{run.traceId} started {formatDateTime(run.startedAt)}</p>
+                    <p className="muted-copy mt-1 text-sm">{run.summary}</p>
+                    <p className="subtle-copy mt-2 break-words text-xs"><span className="mono-token">{run.traceId}</span> started {formatDateTime(run.startedAt)}</p>
                   </div>
                   <StatusBadge label={run.status} tone={runStatusTone(run.status)} />
                 </div>
@@ -68,14 +68,14 @@ export function OverviewDashboard() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Pending approvals" description="Risky work stays paused until the assigned reviewer decides.">
+        <SectionCard title="Approval watch" description="Risky work stays paused until the assigned reviewer decides.">
           <div className="space-y-3">
             {mockApprovals.map((approval) => (
-              <div key={approval.id} className="rounded-md bg-white/[0.035] p-4">
+              <div key={approval.id} className="data-card-muted p-4">
                 <div className="flex items-start justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold text-white">{approval.assignedRole}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">{approval.reason}</p>
+                    <p className="muted-copy mt-1 text-sm">{approval.reason}</p>
                   </div>
                   <StatusBadge label={approval.status} tone={approvalStatusTone(approval.status)} />
                 </div>
@@ -89,11 +89,11 @@ export function OverviewDashboard() {
         <SectionCard title="Top risks" description="Findings are connected to workflow runs and release gates.">
           <div className="space-y-3">
             {mockRisks.slice(0, 3).map((risk) => (
-              <div key={risk.id} className="rounded-md bg-white/[0.035] p-4">
+              <div key={risk.id} className="data-card-muted p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold text-white">{risk.title}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-400">{risk.evidenceSummary}</p>
+                    <p className="muted-copy mt-1 text-sm">{risk.evidenceSummary}</p>
                   </div>
                   <RiskBadge riskLevel={risk.severity} />
                 </div>
@@ -105,10 +105,10 @@ export function OverviewDashboard() {
         <SectionCard title="Recent audit events" description="Sensitive decisions are recorded with actor and correlation context.">
           <div className="space-y-3">
             {mockAuditLogs.slice(0, 4).map((audit) => (
-              <div key={audit.id} className="rounded-md bg-white/[0.035] p-4">
+              <div key={audit.id} className="data-card-muted p-4">
                 <p className="text-sm font-semibold text-white">{audit.action}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-400">{audit.reason}</p>
-                <p className="mt-2 text-xs text-slate-500">{formatDateTime(audit.createdAt)} via {audit.correlationId}</p>
+                <p className="muted-copy mt-1 text-sm">{audit.reason}</p>
+                <p className="subtle-copy mt-2 break-words text-xs">{formatDateTime(audit.createdAt)} via <span className="mono-token">{audit.correlationId}</span></p>
               </div>
             ))}
           </div>

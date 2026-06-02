@@ -37,8 +37,8 @@ export function ApprovalQueue() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Approval queue"
-        title="Human review for high-risk agent actions."
-        description="Approval cards show who can decide, why the action is gated, and what evidence triggered review."
+        title="Human review for gated agent actions."
+        description="Decision cards show who can approve, why the action paused, and what evidence triggered review."
       />
       <SectionCard
         title="Pending and recent approvals"
@@ -49,7 +49,7 @@ export function ApprovalQueue() {
             const canDecide = approval.status === "pending" && canDecideApproval(selectedRole, approval.assignedRole);
 
             return (
-              <article key={approval.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+              <article key={approval.id} className="data-card">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -57,21 +57,21 @@ export function ApprovalQueue() {
                       <StatusBadge label={approval.status} tone={approvalStatusTone(approval.status)} />
                       <RiskBadge riskLevel={approval.riskLevel} />
                     </div>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{approval.reason}</p>
-                    <p className="mt-3 text-xs text-slate-500">
+                    <p className="muted-copy mt-3 text-sm text-slate-300">{approval.reason}</p>
+                    <p className="subtle-copy mt-3 text-xs">
                       Assigned to {approval.assignedRole}. Requested {formatDateTime(approval.requestedAt)}.
                     </p>
-                    <p className="mt-2 rounded-md border border-white/10 bg-slate-950/50 px-3 py-2 text-xs text-slate-400">
+                    <p className="data-card-muted mt-2 px-3 py-2 text-xs text-slate-400">
                       Current role permission: {canDecide ? "Can decide this local demo approval." : "Read-only for this approval in the demo RBAC model."}
                     </p>
-                    {approval.decisionComment ? <p className="mt-3 text-sm leading-6 text-slate-400">{approval.decisionComment}</p> : null}
+                    {approval.decisionComment ? <p className="muted-copy mt-3 text-sm">{approval.decisionComment}</p> : null}
                   </div>
                   <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
                     <button
                       type="button"
                       disabled={!canDecide}
                       onClick={() => decideApproval(approval.id, "approved")}
-                      className="rounded-lg border border-emerald-300/25 bg-emerald-300/10 px-3 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/15 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-slate-600"
+                      className="decision-button decision-approve focus-ring"
                     >
                       Approve
                     </button>
@@ -79,7 +79,7 @@ export function ApprovalQueue() {
                       type="button"
                       disabled={!canDecide}
                       onClick={() => decideApproval(approval.id, "rejected")}
-                      className="rounded-lg border border-rose-300/25 bg-rose-300/10 px-3 py-2 text-sm font-semibold text-rose-100 transition hover:bg-rose-300/15 disabled:cursor-not-allowed disabled:border-white/10 disabled:bg-white/[0.03] disabled:text-slate-600"
+                      className="decision-button decision-reject focus-ring"
                     >
                       Reject
                     </button>

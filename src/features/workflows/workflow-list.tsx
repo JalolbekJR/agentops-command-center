@@ -10,8 +10,8 @@ export function WorkflowList() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Workflow model"
-        title="Structured workflows with approvals as first-class steps."
-        description="Each workflow exposes status, version, dependencies, and review gates before simulation is added."
+        title="Controlled automation pipelines with visible gates."
+        description="Workflow definitions expose status, version, dependencies, and approval checkpoints before simulation is added."
       />
       <SectionCard
         title="Workflow definitions"
@@ -19,33 +19,33 @@ export function WorkflowList() {
       >
         <div className="grid gap-4 xl:grid-cols-3">
           {mockWorkflows.map((workflow) => (
-            <article key={workflow.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
+            <article key={workflow.id} className="data-card">
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-semibold text-white">{workflow.name}</p>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">{workflow.description}</p>
+                  <p className="muted-copy mt-1 text-sm">{workflow.description}</p>
                 </div>
                 <StatusBadge label={workflow.status} tone={workflowStatusTone(workflow.status)} />
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-lg border border-white/10 bg-slate-950/50 p-3">
-                  <p className="text-xs uppercase text-slate-500">Version</p>
+                <div className="detail-tile">
+                  <p className="meta-label">Version</p>
                   <p className="mt-1 font-semibold text-white">v{workflow.version}</p>
                 </div>
-                <div className="rounded-lg border border-white/10 bg-slate-950/50 p-3">
-                  <p className="text-xs uppercase text-slate-500">Steps</p>
+                <div className="detail-tile">
+                  <p className="meta-label">Steps</p>
                   <p className="mt-1 font-semibold text-white">{workflow.steps.length}</p>
                 </div>
               </div>
               <div className="mt-4 space-y-2">
                 {workflow.steps.map((step) => (
-                  <div key={step.id} className="rounded-md border border-white/10 bg-slate-950/40 px-3 py-2">
+                  <div key={step.id} className="data-card-muted px-3 py-2">
                     <p className="text-sm font-medium text-slate-100">{step.name}</p>
-                    <p className="text-xs text-slate-500">{step.type} step - depends on {step.dependsOnStepKeys.length || "none"}</p>
+                    <p className="subtle-copy text-xs">{step.type} step - depends on {step.dependsOnStepKeys.length || "none"}</p>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-xs text-slate-500">Updated {formatDateTime(workflow.updatedAt)}</p>
+              <p className="subtle-copy mt-4 text-xs">Updated {formatDateTime(workflow.updatedAt)}</p>
             </article>
           ))}
         </div>

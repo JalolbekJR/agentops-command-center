@@ -13,7 +13,7 @@ export function BackToTop({ targetId }: { targetId: string }) {
     }
 
     function updateVisibility() {
-      setIsVisible((scrollTarget?.scrollTop ?? 0) > 420);
+      setIsVisible((scrollTarget?.scrollTop ?? 0) > 560);
     }
 
     updateVisibility();
@@ -35,11 +35,12 @@ export function BackToTop({ targetId }: { targetId: string }) {
       type="button"
       aria-label="Back to top"
       onClick={scrollToTop}
-      className="fixed bottom-5 right-5 z-40 grid size-11 place-items-center rounded-full bg-slate-900/95 text-slate-200 shadow-command backdrop-blur transition hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-slate-400/40"
+      className="focus-ring fixed bottom-3 right-3 z-40 inline-flex h-10 items-center gap-2 rounded-md border border-white/[0.08] bg-slate-950/88 px-3 text-sm font-semibold text-slate-200 shadow-command backdrop-blur transition hover:bg-white/[0.08] sm:bottom-5 sm:right-5"
     >
       <svg aria-hidden="true" viewBox="0 0 20 20" className="size-5" fill="none">
         <path d="M5 12.5 10 7l5 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
+      <span>Top</span>
     </button>
   );
 }

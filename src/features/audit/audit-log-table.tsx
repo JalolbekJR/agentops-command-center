@@ -11,14 +11,14 @@ export function AuditLogTable() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Audit"
-        title="Trace sensitive decisions with actor and correlation context."
-        description="Approvals, risks, workflow changes, and review events stay explainable."
+        title="Trace sensitive decisions with actor context."
+        description="Approvals, risks, workflow changes, and review events stay readable and correlated."
       />
       <SectionCard title="Audit log" description="Recent governance events.">
-        <div className="hidden overflow-hidden rounded-lg border border-white/10 lg:block">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-white/10 text-left text-sm">
-              <thead className="bg-white/[0.03] text-xs uppercase text-slate-500">
+        <div className="data-table-shell hidden lg:block">
+          <div className="premium-scroll overflow-x-auto">
+            <table className="data-table">
+              <thead>
                 <tr>
                   <th className="px-4 py-3">Time</th>
                   <th className="px-4 py-3">Actor</th>
@@ -28,15 +28,15 @@ export function AuditLogTable() {
                   <th className="px-4 py-3">Correlation</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody>
                 {mockAuditLogs.map((audit) => (
-                  <tr key={audit.id} className="bg-slate-950/35 align-top">
+                  <tr key={audit.id}>
                     <td className="whitespace-nowrap px-4 py-4 text-slate-400">{formatDateTime(audit.createdAt)}</td>
                     <td className="whitespace-nowrap px-4 py-4 text-slate-300">{usersById.get(audit.actorUserId)?.name ?? "System"}</td>
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-xs text-cyan-100">{audit.action}</td>
+                    <td className="mono-token whitespace-nowrap px-4 py-4 text-xs">{audit.action}</td>
                     <td className="px-4 py-4 text-slate-300">{audit.targetType}: {audit.targetId}</td>
                     <td className="max-w-md px-4 py-4 text-slate-400">{audit.reason}</td>
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-xs text-slate-500">{audit.correlationId}</td>
+                    <td className="mono-token whitespace-nowrap px-4 py-4 text-xs text-slate-500">{audit.correlationId}</td>
                   </tr>
                 ))}
               </tbody>
@@ -45,21 +45,21 @@ export function AuditLogTable() {
         </div>
         <div className="space-y-3 lg:hidden">
           {mockAuditLogs.map((audit) => (
-            <article key={audit.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
-              <p className="font-mono text-xs text-cyan-100">{audit.action}</p>
+            <article key={audit.id} className="data-card">
+              <p className="mono-token break-words text-xs">{audit.action}</p>
               <p className="mt-2 text-sm font-semibold text-white">{usersById.get(audit.actorUserId)?.name ?? "System"}</p>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{audit.reason}</p>
+              <p className="muted-copy mt-2 text-sm">{audit.reason}</p>
               <dl className="mt-4 grid gap-3 text-sm">
                 <div>
-                  <dt className="text-xs uppercase text-slate-500">Target</dt>
+                  <dt className="meta-label">Target</dt>
                   <dd className="mt-1 break-words text-slate-300">{audit.targetType}: {audit.targetId}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase text-slate-500">Correlation</dt>
-                  <dd className="mt-1 break-words font-mono text-xs text-slate-400">{audit.correlationId}</dd>
+                  <dt className="meta-label">Correlation</dt>
+                  <dd className="mono-token mt-1 break-words text-xs">{audit.correlationId}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase text-slate-500">Time</dt>
+                  <dt className="meta-label">Time</dt>
                   <dd className="mt-1 text-slate-300">{formatDateTime(audit.createdAt)}</dd>
                 </div>
               </dl>
