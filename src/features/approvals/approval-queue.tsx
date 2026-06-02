@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PageHeader } from "@/components/page-header";
 import { RiskBadge } from "@/components/risk-badge";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
@@ -34,9 +35,14 @@ export function ApprovalQueue() {
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Approval queue"
+        title="Human review for high-risk agent actions."
+        description="Approval cards show who can decide, why the action is gated, and what evidence triggered review."
+      />
       <SectionCard
-        title="Human approval queue"
-        description="Approval decisions are local demo state only. They show the intended RBAC workflow but do not execute real tools."
+        title="Pending and recent approvals"
+        description="Decisions update local UI state only."
       >
         <div className="space-y-4">
           {approvals.map((approval) => {
@@ -60,7 +66,7 @@ export function ApprovalQueue() {
                     </p>
                     {approval.decisionComment ? <p className="mt-3 text-sm leading-6 text-slate-400">{approval.decisionComment}</p> : null}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
                     <button
                       type="button"
                       disabled={!canDecide}

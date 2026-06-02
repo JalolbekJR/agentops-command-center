@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/page-header";
 import { RiskBadge } from "@/components/risk-badge";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
@@ -9,9 +10,14 @@ export function RiskDashboard() {
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Risk review"
+        title="Prioritize unsafe automation, policy, and QA findings."
+        description="Each finding has severity, evidence, owner, and mitigation context."
+      />
       <SectionCard
-        title="Risk and security dashboard"
-        description="Risk findings connect AI behavior to evidence, owners, mitigation, and release gates."
+        title="Risk findings"
+        description="Open issues linked to runs and release readiness."
         action={<StatusBadge label={`${highRiskCount} high risk`} tone={highRiskCount > 0 ? "danger" : "success"} />}
       >
         <div className="grid gap-4 lg:grid-cols-3">

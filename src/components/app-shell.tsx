@@ -1,20 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import { DemoStateProvider } from "@/lib/demo-state";
 import { Sidebar } from "@/components/sidebar";
 import { Topbar } from "@/components/topbar";
+import { BackToTop } from "@/components/back-to-top";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
   return (
     <DemoStateProvider>
-      <div className="surface-grid min-h-screen">
-        <div className="mx-auto flex min-h-screen w-full max-w-[1680px] flex-col lg:flex-row">
-          <Sidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <Topbar />
-            <main className="flex-1 px-4 pb-10 pt-4 sm:px-6 lg:px-8">{children}</main>
+      <div className="surface-grid h-dvh overflow-hidden bg-slate-950">
+        <div className="mx-auto flex h-full w-full max-w-[1680px] overflow-hidden">
+          <Sidebar isMobileNavOpen={isMobileNavOpen} onCloseMobileNav={() => setIsMobileNavOpen(false)} />
+          <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+            <Topbar onOpenMobileNav={() => setIsMobileNavOpen(true)} />
+            <main id="app-main-scroll" className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-24 pt-4 sm:px-6 lg:px-8">
+              {children}
+            </main>
           </div>
         </div>
+        <BackToTop targetId="app-main-scroll" />
       </div>
     </DemoStateProvider>
   );

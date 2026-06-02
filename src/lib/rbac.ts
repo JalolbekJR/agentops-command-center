@@ -24,37 +24,37 @@ export const roleDefinitions: RoleDefinition[] = [
       "audit.read",
       "rbac.manage"
     ],
-    demoNote: "Demo role with full local visibility. Future production auth must enforce this server-side."
+    demoNote: "Full local workspace visibility for portfolio review."
   },
   {
     name: "AI Engineer",
     description: "Builds agents and workflows, starts runs, and debugs tool calls.",
     permissions: ["dashboard.read", "agent.read", "agent.write", "workflow.read", "workflow.write", "run.read", "run.start", "approval.read", "evaluation.read", "risk.read", "browserQa.read", "cost.read"],
-    demoNote: "Can inspect technical run details but does not own security approval decisions."
+    demoNote: "Builds and debugs agent workflows with limited approval authority."
   },
   {
     name: "QA Reviewer",
     description: "Reviews browser QA sessions, evaluations, failed runs, and release gate readiness.",
     permissions: ["dashboard.read", "agent.read", "workflow.read", "run.read", "approval.read", "evaluation.read", "evaluation.write", "risk.read", "browserQa.read", "browserQa.write", "cost.read"],
-    demoNote: "Can judge release quality and QA blockers, but cannot override security gates."
+    demoNote: "Reviews QA evidence, failed runs, and release readiness."
   },
   {
     name: "Security Reviewer",
     description: "Reviews high-risk tool calls, sensitive data warnings, policy violations, and audit logs.",
     permissions: ["dashboard.read", "agent.read", "workflow.read", "run.read", "approval.read", "approval.decide", "evaluation.read", "risk.read", "risk.resolve", "browserQa.read", "audit.read"],
-    demoNote: "Can decide security approvals and resolve high-risk findings in the demo model."
+    demoNote: "Owns high-risk security findings and approval gates."
   },
   {
     name: "Product Manager",
     description: "Reviews business outcomes, evaluation quality, release gates, and customer-impacting decisions.",
     permissions: ["dashboard.read", "agent.read", "workflow.read", "run.read", "approval.read", "approval.decide", "evaluation.read", "risk.read", "browserQa.read", "cost.read"],
-    demoNote: "Can approve product-level decisions, with technical and security gates still separated."
+    demoNote: "Reviews business outcomes and product-level decisions."
   },
   {
     name: "Viewer",
     description: "Read-only access to selected dashboards, reports, and redacted operational summaries.",
     permissions: ["dashboard.read", "agent.read", "workflow.read", "run.read", "evaluation.read", "risk.read", "browserQa.read", "cost.read"],
-    demoNote: "Read-only demo role. Sensitive tool detail and audit records are intentionally limited."
+    demoNote: "Read-only access to redacted operational summaries."
   }
 ];
 

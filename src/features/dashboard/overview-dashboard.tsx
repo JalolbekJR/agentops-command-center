@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatCard } from "@/components/stat-card";
 import { StatusBadge } from "@/components/status-badge";
@@ -27,31 +28,25 @@ export function OverviewDashboard() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-white/10 bg-slate-950/70 p-5 shadow-command">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="text-xs font-semibold uppercase text-cyan-200">Local deterministic demo</p>
-            <h2 className="mt-2 max-w-4xl text-3xl font-semibold tracking-normal text-white">
-              Govern agent workflows with traceable runs, approval gates, evaluations, risks, and audit evidence.
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
-              This scaffold uses mock data only. It is intentionally separated from future backend, auth, database, AI, and browser automation integrations.
-            </p>
-          </div>
-          <Link href="/runs" className="rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/15 focus:outline-none focus:ring-2 focus:ring-cyan-300">
+      <PageHeader
+        eyebrow="Command overview"
+        title="Control agent workflows before they touch customers."
+        description="Trace runs, approvals, evaluations, risks, QA evidence, and audit activity from one operations shell."
+        action={
+          <Link href="/runs" className="inline-flex w-full justify-center rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/15 focus:outline-none focus:ring-2 focus:ring-cyan-300 sm:w-auto">
             Inspect run timeline
           </Link>
-        </div>
-      </section>
+        }
+      />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Active agents" value={String(activeAgents)} detail="Specialized demo agents with owners and risk levels." tone="success" />
-        <StatCard label="Running workflows" value={String(runningRuns)} detail="Includes runs paused for human approval." tone="info" />
-        <StatCard label="Failed runs" value={String(failedRuns)} detail="Failures stay replayable through timeline events." tone={failedRuns > 0 ? "danger" : "success"} />
-        <StatCard label="Pending approvals" value={String(pendingApprovals)} detail="High-risk actions remain approval-gated." tone={pendingApprovals > 0 ? "warning" : "success"} />
-        <StatCard label="Risk findings" value={String(openRisks)} detail="Open or triaged findings linked to runs." tone={openRisks > 0 ? "danger" : "success"} />
+        <StatCard label="Active agents" value={String(activeAgents)} detail="Owned agents with scoped capabilities." tone="success" />
+        <StatCard label="Running workflows" value={String(runningRuns)} detail="Includes approval-paused runs." tone="info" />
+        <StatCard label="Failed runs" value={String(failedRuns)} detail="Replayable from timeline events." tone={failedRuns > 0 ? "danger" : "success"} />
+        <StatCard label="Pending approvals" value={String(pendingApprovals)} detail="Risky actions stay gated." tone={pendingApprovals > 0 ? "warning" : "success"} />
+        <StatCard label="Risk findings" value={String(openRisks)} detail="Open findings with owners." tone={openRisks > 0 ? "danger" : "success"} />
         <StatCard label="Avg evaluation" value={formatPercent(averageEvaluation, 1)} detail="Weighted score across safety, quality, cost, and policy." tone="warning" />
-        <StatCard label="Browser QA pass rate" value={formatPercent(browserPassRate, 0)} detail="Deterministic session records for route smoke checks." tone="success" />
+        <StatCard label="Browser QA pass rate" value={formatPercent(browserPassRate, 0)} detail="Recorded route smoke checks." tone="success" />
         <StatCard label="Token/cost trend" value={formatCents(totalCost)} detail={`${formatNumber(totalTokens)} mock tokens tracked this window.`} tone="info" />
       </div>
 
@@ -91,7 +86,7 @@ export function OverviewDashboard() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <SectionCard title="Top risks" description="Findings are connected to workflow runs and future release gates.">
+        <SectionCard title="Top risks" description="Findings are connected to workflow runs and release gates.">
           <div className="space-y-3">
             {mockRisks.slice(0, 3).map((risk) => (
               <div key={risk.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
@@ -107,7 +102,7 @@ export function OverviewDashboard() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Recent audit events" description="Audited activity proves the future governance model.">
+        <SectionCard title="Recent audit events" description="Sensitive decisions are recorded with actor and correlation context.">
           <div className="space-y-3">
             {mockAuditLogs.slice(0, 4).map((audit) => (
               <div key={audit.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">

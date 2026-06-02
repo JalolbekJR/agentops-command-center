@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockRunEvents, mockRuns, mockToolCalls } from "@/data/mock-runs";
@@ -13,7 +14,12 @@ export function RunTimeline() {
 
   return (
     <div className="space-y-6">
-      <SectionCard title="Run timeline" description="A workflow run is represented as ordered, replayable events rather than a black-box answer.">
+      <PageHeader
+        eyebrow="Run operations"
+        title="Replay a workflow from trigger to approval gate."
+        description="Runs are shown as ordered events, tool calls, status changes, cost, trace IDs, and reviewer evidence."
+      />
+      <SectionCard title="Run timeline" description="Ordered events make the agent run explainable.">
         <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4">
             <div className="flex items-start justify-between gap-3">
@@ -65,7 +71,7 @@ export function RunTimeline() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Tool calls" description="Tool data is summarized for the local demo. Future backend work should apply role-aware redaction.">
+      <SectionCard title="Tool calls" description="Tool inputs and outputs are summarized for review.">
         <div className="grid gap-4 lg:grid-cols-2">
           {toolCalls.map((toolCall) => (
             <article key={toolCall.id} className="rounded-lg border border-white/10 bg-white/[0.03] p-4">

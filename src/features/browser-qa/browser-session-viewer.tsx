@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockBrowserSessions } from "@/data/mock-browser-sessions";
@@ -6,9 +7,14 @@ import { formatDateTime } from "@/lib/format";
 export function BrowserSessionViewer() {
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Browser QA"
+        title="Review browser evidence tied to workflow runs."
+        description="Sessions record route checks, assertions, issue counts, and accessibility notes."
+      />
       <SectionCard
-        title="Browser QA sessions"
-        description="These are deterministic records, not live browser automation. Phase 3 can run browser QA after dependencies and app runtime are ready."
+        title="Session records"
+        description="Deterministic QA evidence for the scaffold."
       >
         <div className="space-y-4">
           {mockBrowserSessions.map((session) => (
@@ -26,7 +32,7 @@ export function BrowserSessionViewer() {
               <div className="mt-4 grid gap-3 lg:grid-cols-2">
                 {session.steps.map((step) => (
                   <div key={step.id} className="rounded-lg border border-white/10 bg-slate-950/50 p-4">
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <p className="text-sm font-semibold text-white">Step {step.sequence}: {step.action}</p>
                       <StatusBadge label={step.status} tone={step.status === "passed" ? "success" : step.status === "failed" ? "danger" : "warning"} />
                     </div>

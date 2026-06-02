@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockEvaluations } from "@/data/mock-evaluations";
@@ -27,9 +28,14 @@ const scoreLabels: Record<(typeof scoreKeys)[number], string> = {
 export function EvaluationSummary() {
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Evaluation"
+        title="Score agent outcomes before release."
+        description="Quality, safety, reliability, cost, and policy scores feed release readiness."
+      />
       <SectionCard
-        title="Evaluation dashboard"
-        description="Deterministic scorecards keep AI output review connected to runs, safety, cost, and release readiness."
+        title="Scorecards"
+        description="Weighted results for recent workflow runs."
       >
         <div className="grid gap-4 xl:grid-cols-3">
           {mockEvaluations.map((evaluation) => (

@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockWorkflows } from "@/data/mock-workflows";
@@ -7,9 +8,14 @@ import { workflowStatusTone } from "@/lib/status";
 export function WorkflowList() {
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Workflow model"
+        title="Structured workflows with approvals as first-class steps."
+        description="Each workflow exposes status, version, dependencies, and review gates before simulation is added."
+      />
       <SectionCard
-        title="Workflow builder model"
-        description="Phase 2 keeps workflows read-only and structured. Future phases can add visual editing, graph validation, and simulation."
+        title="Workflow definitions"
+        description="Read-only definitions for the current scaffold."
       >
         <div className="grid gap-4 xl:grid-cols-3">
           {mockWorkflows.map((workflow) => (

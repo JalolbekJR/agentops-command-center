@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { roleDefinitions } from "@/lib/rbac";
@@ -10,12 +11,22 @@ export function RbacSettings() {
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        eyebrow="Settings"
+        title="Demo boundary and RBAC model."
+        description="This page keeps implementation caveats out of the operational screens."
+      />
       <SectionCard
         title="Settings and RBAC"
-        description="The role switcher is a local demo control. Phase 7 must replace this with real authentication and server-side authorization."
+        description="Role switching is local UI state for portfolio review."
       >
-        <div className="rounded-lg border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
-          Current demo role: <strong>{selectedRole}</strong>. This affects helper text and local permission labels only; it is not auth.
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-lg border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
+            Current role: <strong>{selectedRole}</strong>. It affects helper text and local permission labels only.
+          </div>
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 text-sm leading-6 text-slate-300">
+            Local demo boundary: no external requests, auth provider, database, live agents, secrets, deployment, or private data.
+          </div>
         </div>
 
         <div className="mt-4 grid gap-4 xl:grid-cols-2">

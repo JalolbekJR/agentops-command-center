@@ -12,6 +12,7 @@ export function formatNumber(value: number) {
 
 export function formatDateTime(value: string) {
   return new Intl.DateTimeFormat("en-US", {
+    timeZone: "UTC",
     month: "short",
     day: "numeric",
     hour: "numeric",
