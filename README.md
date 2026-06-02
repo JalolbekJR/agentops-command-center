@@ -4,9 +4,11 @@ AgentOps Command Center is a portfolio-grade enterprise dashboard concept for co
 
 ## Status
 
-Current phase: **Phase 1 - documentation and architecture foundation**.
+Current phase: **Phase 2 - manual Next.js app scaffold and deterministic local demo foundation**.
 
-This repository is intentionally not scaffolded as an application yet. The first milestone is to define the product, domain model, security model, API contracts, workflow engine, QA strategy, and portfolio case study before any Next.js code is generated.
+Phase 1 documentation is complete and remains the source of truth for product, architecture, domain model, security, RBAC, API contracts, workflow engine, QA strategy, roadmap, and portfolio positioning.
+
+Phase 2 introduces a manually created Next.js App Router scaffold with TypeScript, Tailwind CSS, typed domain models, deterministic mock data, route structure, reusable components, and a first premium dashboard UI.
 
 Honest scope: this is a portfolio/demo system in progress. It is designed to demonstrate production-minded engineering decisions, but it does not yet include a live backend, real AI integrations, real browser recordings, production customers, or deployed infrastructure.
 
@@ -110,20 +112,24 @@ Planned screenshot set:
 
 ## Local Development
 
-No app scaffold exists yet.
+The app scaffold exists, but dependencies may not be installed yet. Package installation is intentionally approval-gated.
 
-When Phase 2 starts, the expected flow is:
+After dependency installation is approved, the expected local flow is:
 
-1. Inspect the Phase 1 docs.
-2. Confirm the package manager before installing dependencies.
-3. Scaffold the Next.js app only after approval.
-4. Create route structure, domain types, mock data, and the first dashboard UI.
-5. Run available checks and summarize changes.
+```bash
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+```
+
+The current scaffold uses local deterministic mock data only. It does not connect to external APIs, auth providers, databases, AI services, browser automation, deployment services, or secrets.
 
 ## Roadmap
 
 - Phase 1: Documentation and architecture foundation.
-- Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, and seed data.
+- Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, seed data, and first dashboard UI.
 - Phase 3: Premium UI shell and dashboard overview.
 - Phase 4: Mock interactions, role switcher, filters, approvals, and run details.
 - Phase 5: Workflow simulation, deterministic event replay, evaluation, and risk logic.
