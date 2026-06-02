@@ -10,3 +10,5 @@ build/
 repomix-output.*
 
 tsconfig.tsbuildinfo
+
+tsconfig.tsbuildinfo
