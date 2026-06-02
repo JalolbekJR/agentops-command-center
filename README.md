@@ -1,0 +1,137 @@
+# AgentOps Command Center
+
+AgentOps Command Center is a portfolio-grade enterprise dashboard concept for controlling AI agent workflows with traceable runs, approval gates, evaluation scores, risk findings, and audit-ready operations.
+
+## Status
+
+Current phase: **Phase 1 - documentation and architecture foundation**.
+
+This repository is intentionally not scaffolded as an application yet. The first milestone is to define the product, domain model, security model, API contracts, workflow engine, QA strategy, and portfolio case study before any Next.js code is generated.
+
+Honest scope: this is a portfolio/demo system in progress. It is designed to demonstrate production-minded engineering decisions, but it does not yet include a live backend, real AI integrations, real browser recordings, production customers, or deployed infrastructure.
+
+## Problem
+
+AI agents can now run multi-step workflows, call tools, write files, browse sites, and make decisions that affect users or internal operations. Most demos show the happy path. Real teams need a way to answer harder questions:
+
+- Which agent ran, and why?
+- What tools did it call?
+- Which step failed?
+- Was a risky action approved by a human?
+- Did the run pass quality, safety, cost, and release gates?
+- Can a reviewer replay or audit the decision trail?
+- Can security teams see sensitive tool calls and prompt-injection risk?
+
+Without this control plane, AI automation becomes difficult to trust, debug, and govern.
+
+## Solution
+
+AgentOps Command Center models an enterprise AI operations platform where teams can create agents, define workflows, inspect run timelines, review tool calls, approve high-risk actions, evaluate quality, track cost, and audit every important change.
+
+The Phase 1 docs define the system before implementation so future UI and backend work has a real architecture instead of a thin dashboard shell.
+
+## Key Features Planned
+
+- Agent registry with capabilities, risk level, ownership, status, success rate, and cost.
+- Workflow builder model with steps, dependencies, tools, retries, and human approval checkpoints.
+- GitHub Actions-style run timelines with structured events, traces, failures, and replay data.
+- Tool call history with input and output summaries, approval requirements, and risk severity.
+- Human approval queue for production-impacting, sensitive, or policy-blocked actions.
+- Evaluation dashboard for correctness, safety, reliability, latency, cost, user impact, and policy compliance.
+- Risk and security dashboard for prompt injection, tool misuse, data exposure, access, and unsafe automation.
+- Browser QA session viewer for deterministic demo sessions, steps, screenshots, console issues, network issues, and accessibility notes.
+- Cost and token analytics by project, workflow, agent, model, and time window.
+- Audit log for approvals, role changes, workflow edits, release gates, and sensitive activity.
+- Team and RBAC model for Founder/Admin, AI Engineer, QA Reviewer, Security Reviewer, Product Manager, and Viewer roles.
+
+## Why This Project Exists
+
+This project is meant to show more than UI taste. It is designed to demonstrate:
+
+- Computer science fundamentals through state machines, graph workflows, event timelines, queues, retries, and deterministic replay.
+- Full-stack architecture through API contracts, domain modeling, database design, RBAC, and future backend boundaries.
+- AI systems thinking through agent run models, tool permissions, evaluation, risk scoring, and prompt/tool-injection awareness.
+- Product judgment through role-specific workflows, realistic enterprise use cases, and careful MVP boundaries.
+- Security maturity through least privilege, approval gates, auditability, secret handling, and trust boundaries.
+- QA discipline through release gates, browser QA plans, accessibility checks, and performance criteria.
+
+## Architecture Summary
+
+Phase 1 defines a staged architecture:
+
+1. **Static demo foundation**: deterministic local data, typed domain models, and polished UI once the app is scaffolded.
+2. **Interactive simulation**: local workflow run engine, approval actions, filters, failure replay, and role switching.
+3. **Backend upgrade path**: authenticated API, PostgreSQL database, RBAC enforcement, queue/worker processing, WebSocket updates, and real AI/browser automation boundaries.
+4. **Production hardening path**: observability, rate limits, audit retention, secret references, environment boundaries, and deployment controls.
+
+The recommended future stack is:
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui-style component composition
+- Local deterministic seed data first
+- Future PostgreSQL with Prisma or an equivalent typed data layer
+- Future queue/worker model for runs
+- Future WebSocket or server-sent events for live run updates
+
+## Documentation Map
+
+- [Product Brief](docs/PRODUCT_BRIEF.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Database Schema](docs/DATABASE_SCHEMA.md)
+- [API Contracts](docs/API_CONTRACTS.md)
+- [Security Model](docs/SECURITY_MODEL.md)
+- [RBAC Matrix](docs/RBAC_MATRIX.md)
+- [AI Agent Run Model](docs/AI_AGENT_RUN_MODEL.md)
+- [Workflow Engine Design](docs/WORKFLOW_ENGINE_DESIGN.md)
+- [Evaluation and Risk Model](docs/EVALUATION_AND_RISK_MODEL.md)
+- [UI/UX Direction](docs/UI_UX_DIRECTION.md)
+- [QA Test Plan](docs/QA_TEST_PLAN.md)
+- [Case Study](docs/CASE_STUDY.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Interview Talking Points](docs/INTERVIEW_TALKING_POINTS.md)
+- [Build Phases](docs/BUILD_PHASES.md)
+- [Resume Bullets](docs/RESUME_BULLETS.md)
+
+## Screenshots
+
+Screenshots will be added after the Phase 2 and Phase 3 app shell and dashboard UI are implemented.
+
+Planned screenshot set:
+
+- Executive dashboard overview.
+- Agent registry.
+- Workflow run timeline.
+- Human approval queue.
+- Risk and evaluation dashboard.
+- Browser QA session detail.
+- Audit log and RBAC settings.
+
+## Local Development
+
+No app scaffold exists yet.
+
+When Phase 2 starts, the expected flow is:
+
+1. Inspect the Phase 1 docs.
+2. Confirm the package manager before installing dependencies.
+3. Scaffold the Next.js app only after approval.
+4. Create route structure, domain types, mock data, and the first dashboard UI.
+5. Run available checks and summarize changes.
+
+## Roadmap
+
+- Phase 1: Documentation and architecture foundation.
+- Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, and seed data.
+- Phase 3: Premium UI shell and dashboard overview.
+- Phase 4: Mock interactions, role switcher, filters, approvals, and run details.
+- Phase 5: Workflow simulation, deterministic event replay, evaluation, and risk logic.
+- Phase 6: Tests, browser QA, accessibility, performance checks, and release gates.
+- Phase 7: Backend/database upgrade path with auth, RBAC, PostgreSQL, and API handlers.
+- Phase 8: Real AI integration boundary with tool permissions and observability.
+- Phase 9: Deployment plan, screenshots, and case-study polish.
+
+## Portfolio Value
+
+This project is intended to prove that I can design and build a serious product system, not just prompt a UI into existence. The docs and future implementation are structured to show product thinking, architecture, domain modeling, AI operations, security, QA, and practical delivery judgment.
