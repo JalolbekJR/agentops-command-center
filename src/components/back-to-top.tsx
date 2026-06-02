@@ -35,7 +35,7 @@ export function BackToTop({ targetId }: { targetId: string }) {
       type="button"
       aria-label="Back to top"
       onClick={scrollToTop}
-      className="fixed bottom-5 right-5 z-40 grid size-11 place-items-center rounded-full border border-cyan-300/30 bg-slate-900/95 text-cyan-100 shadow-command backdrop-blur transition hover:border-cyan-200 hover:bg-cyan-300/10 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+      className="fixed bottom-5 right-5 z-40 grid size-11 place-items-center rounded-full bg-slate-900/95 text-slate-200 shadow-command backdrop-blur transition hover:bg-white/[0.08] focus:outline-none focus:ring-2 focus:ring-slate-400/40"
     >
       <svg aria-hidden="true" viewBox="0 0 20 20" className="size-5" fill="none">
         <path d="M5 12.5 10 7l5 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
