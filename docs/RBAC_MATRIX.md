@@ -50,6 +50,12 @@
 | Audit log | A | L | L | R | L | - |
 | Policy rules | A | L | L | W security policies | L | - |
 | Release gates | A | R | W QA gates | W security gates | W product gates | L |
+| Workspace setup | A | W connector drafts | R QA setup | R security setup | R plan/setup | L |
+| Connector center | A | W workspace connectors | R | R security review | R | L |
+| Built-in agents catalog | A enable/disable in workspace | R | R | R | R | L |
+| Agent Builder | A | W drafts | R QA templates | R security templates | W review templates | - |
+| Plans and usage | A | R | L | L | R | L |
+| Owner Control Plane | A owner-only demo view | - | - | - | - | - |
 | Comments | A | W | W | W | W | - |
 
 ## High-Risk Action Approval Requirements
@@ -88,6 +94,8 @@
 - Sensitive details should be redacted unless needed by the role.
 - Approval authority is based on action type, risk level, and environment.
 - Viewer is never a fallback role for hidden admin actions.
+- Customer workspace roles cannot change global connector templates, pricing rules, license rules, built-in agent publishing, deployment defaults, or owner-only security policies.
+- Future backend must separate platform owner authorization from customer workspace administration.
 
 ## Future Enterprise Permissions Model
 

@@ -3,43 +3,66 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const navItems = [
-  { href: "/dashboard", label: "Overview", code: "OV" },
-  { href: "/agents", label: "Agents", code: "AG" },
-  { href: "/workflows", label: "Workflows", code: "WF" },
-  { href: "/runs", label: "Runs", code: "RN" },
-  { href: "/approvals", label: "Approvals", code: "AP" },
-  { href: "/evaluations", label: "Evaluations", code: "EV" },
-  { href: "/risks", label: "Risks", code: "RK" },
-  { href: "/browser-qa", label: "Browser QA", code: "QA" },
-  { href: "/audit", label: "Audit", code: "AU" },
-  { href: "/settings", label: "Settings", code: "ST" }
+const navGroups = [
+  {
+    label: "Operations",
+    items: [
+      { href: "/dashboard", label: "Overview", code: "OV" },
+      { href: "/agents", label: "Agents", code: "AG" },
+      { href: "/workflows", label: "Workflows", code: "WF" },
+      { href: "/runs", label: "Runs", code: "RN" },
+      { href: "/approvals", label: "Approvals", code: "AP" },
+      { href: "/evaluations", label: "Evaluations", code: "EV" },
+      { href: "/risks", label: "Risks", code: "RK" },
+      { href: "/browser-qa", label: "Browser QA", code: "QA" },
+      { href: "/audit", label: "Audit", code: "AU" }
+    ]
+  },
+  {
+    label: "Platform",
+    items: [
+      { href: "/setup", label: "Setup", code: "SU" },
+      { href: "/connectors", label: "Connectors", code: "CN" },
+      { href: "/built-in-agents", label: "Built-in Agents", code: "BA" },
+      { href: "/agent-builder", label: "Agent Builder", code: "AB" },
+      { href: "/plans", label: "Plans", code: "PL" },
+      { href: "/owner-control", label: "Owner Control", code: "OC" },
+      { href: "/settings", label: "Settings", code: "ST" }
+    ]
+  }
 ] as const;
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="space-y-0.5 px-1" aria-label="Primary navigation">
-      {navItems.map((item) => {
-        const isActive = pathname === item.href || (pathname === "/" && item.href === "/dashboard");
+    <nav className="space-y-5 px-1" aria-label="Primary navigation">
+      {navGroups.map((group) => (
+        <div key={group.label} className="space-y-1">
+          <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600">{group.label}</p>
+          <div className="space-y-0.5">
+            {group.items.map((item) => {
+              const isActive = pathname === item.href || (pathname === "/" && item.href === "/dashboard");
 
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={onNavigate}
-            aria-current={isActive ? "page" : undefined}
-            className={[
-              "nav-link focus-ring",
-              isActive ? "nav-link-active" : ""
-            ].join(" ")}
-          >
-            <span className="nav-initial">{item.code}</span>
-            <span className="min-w-0 truncate">{item.label}</span>
-          </Link>
-        );
-      })}
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onNavigate}
+                  aria-current={isActive ? "page" : undefined}
+                  className={[
+                    "nav-link focus-ring",
+                    isActive ? "nav-link-active" : ""
+                  ].join(" ")}
+                >
+                  <span className="nav-initial">{item.code}</span>
+                  <span className="min-w-0 truncate">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }

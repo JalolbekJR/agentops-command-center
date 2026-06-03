@@ -102,6 +102,29 @@ Acceptance criteria:
 - Filters and search work on seeded data.
 - Empty states are realistic.
 
+## Phase 3A: Secure Agent Platform Foundation
+
+Goal: extend the deterministic demo into a platform foundation for customer-connected agents and AgentOps-built agents without adding real backend execution.
+
+Deliverables:
+
+- Agent connection model.
+- AgentOps Native Agent Protocol model.
+- Built-in AgentOps agent catalog.
+- AI Agent Builder foundation.
+- Setup and deployment-mode model.
+- Owner-only control plane model.
+- Workspace plan and usage-limit model.
+- Connector security/privacy model.
+- Deterministic TypeScript data, helpers, and premium UI pages.
+
+Acceptance criteria:
+
+- Existing Agent, Workflow, WorkflowRun, RunEvent, ToolCall, ApprovalRequest, EvaluationResult, RiskFinding, BrowserSession, CostMetric, AuditLog, and RBAC model remains intact.
+- New connector/setup/billing concepts map back to existing architecture.
+- No real database, auth, external API, payment, deployment, secrets, or agent execution is added.
+- Public demo stays allowlisted, deterministic, and honest.
+
 ## Phase 5: Workflow And Run Simulation
 
 Goal: simulate agent operations without external calls.

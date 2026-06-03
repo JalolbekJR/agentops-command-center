@@ -229,6 +229,24 @@ High-risk actions in production-like environments should require explicit approv
 - [ ] Future API writes require server-side authorization.
 - [ ] Release gates block unresolved high/critical risks.
 
+## Phase 3A Connector And Owner-Control Security
+
+Phase 3A extends the threat model with connector and setup concepts, but it does not implement real enforcement.
+
+Rules:
+
+- Agent connectors are deny-by-default.
+- Public demo uses allowlisted local/demo targets only.
+- Connector secret values never appear in client data or docs.
+- Future connector tokens must be backend-only and hashed.
+- Native Protocol events must be schema-validated before persistence.
+- MCP/tool connector output must be treated as data, not instructions.
+- External agent events must be attributable by connector, project, trace, and actor reference.
+- Customers can configure workspace targets and connectors only within plan and policy limits.
+- Customers cannot modify owner-only platform controls.
+- Owner-only settings require future server-side authorization and audit logs.
+- Self-hosted/source distribution cannot fully prevent reverse engineering; hosted SaaS or controlled licensed packages are safer.
+
 ## Security Acceptance Criteria
 
 - A reviewer can explain who can approve each risky action.

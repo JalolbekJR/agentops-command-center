@@ -625,3 +625,33 @@ Early app phases should include deterministic seed data:
 - Realistic run events, tool calls, approvals, evaluations, risk findings, cost metrics, browser sessions, and audit logs.
 
 Seed data should be consistent across refreshes so screenshots, testing, and case-study explanations are repeatable.
+
+## Phase 3A Schema Extensions
+
+These are future schema concepts only. Phase 3A adds TypeScript types and deterministic local data, not a database migration.
+
+| Entity | Purpose |
+| --- | --- |
+| `AgentConnector` | Workspace connector configuration for built-ins, Native Protocol, webhook, SDK, MCP, private worker, or trace import. |
+| `AgentEndpoint` | Future ingest, worker, or trace-import endpoint metadata. |
+| `AgentInstallation` | Future relation between a workspace, connector, and configured agent. |
+| `WorkerInstance` | Future private or hosted worker health and deployment state. |
+| `AllowedTarget` | Allowlisted local/demo/staging/repository target with risk and approval policy. |
+| `ConnectorSecretReference` | Secret metadata pointer; never stores secret values. |
+| `AgentArtifact` | Screenshot/report/log/trace reference linked to run evidence. |
+| `WorkspacePlan` | Plan capabilities and limits for demo, Starter, Pro, and Enterprise. |
+| `UsageLimit` | Metered usage record for seats, agents, runs, events, browser QA minutes, retention, and workers. |
+| `SetupStep` | Workspace setup wizard state. |
+| `SetupHealthCheck` | Future worker, connector, target, and plan health state. |
+| `BuiltInAgentDefinition` | Owner-controlled catalog entry for AgentOps-built agents. |
+| `AgentBuilderTemplate` | Template for creating or connecting an agent. |
+| `OwnerControlSetting` | Platform-global owner-only setting. |
+| `PlatformLicenseRule` | Conceptual license/plan/deployment rule for future enforcement. |
+
+Relationship notes:
+
+- `AgentConnector` belongs to `Project`.
+- Connector events create or update `WorkflowRun`, `RunEvent`, `ToolCall`, `ApprovalRequest`, `RiskFinding`, `EvaluationResult`, `CostMetric`, and `AuditLog`.
+- `AllowedTarget` is project-scoped and enforced before execution.
+- `OwnerControlSetting` is platform-scoped and not customer-configurable.
+- `PlatformLicenseRule` affects plan/deployment availability but is not a customer workspace record.

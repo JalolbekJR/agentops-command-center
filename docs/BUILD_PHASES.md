@@ -146,6 +146,40 @@ Acceptance criteria:
 - Role switcher changes actions and redaction.
 - Approvals update local state and audit records.
 
+## Phase 3A: Secure Agent Platform Foundation
+
+Codex should:
+
+- Preserve the current premium shell and core domain model.
+- Add connector, Native Protocol, setup, built-in agent, owner-control, builder, and plan-limit concepts as local deterministic foundation.
+- Keep all customer/company setup concepts separate from platform owner controls.
+- Keep monetization as planning and UI only.
+- Avoid real backend, database migrations, external APIs, auth, payments, deployment, secrets, or agent execution.
+
+Recommended skills/tools:
+
+- Principal enterprise architecture.
+- Production SaaS architecture.
+- Secure-by-design.
+- AI agent pipeline thinking.
+- Technical documentation.
+- Premium frontend/design system guidance.
+
+Commands/checks:
+
+- `npm run typecheck`
+- `npm run lint`
+- `npm run build`
+- Static scan for secrets, external calls, random data, and forbidden APIs.
+
+Acceptance criteria:
+
+- New routes compile and match the existing design language.
+- TypeScript types and deterministic seed data are safe and realistic.
+- Helper logic is pure and testable.
+- Owner-only and workspace-level controls are clearly separated.
+- No fake production claims are introduced.
+
 ## Phase 5: Workflow Simulation
 
 Codex should:

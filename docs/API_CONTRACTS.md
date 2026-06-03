@@ -660,3 +660,27 @@ Auth/RBAC note: QA Reviewer, Product Manager, Security Reviewer, and Admin can i
 Validation note: override requires a comment and cannot bypass critical security policies without explicit future policy support.
 
 Possible errors: `rbac.denied`, `release_gate.blocked`, `validation.invalid_input`.
+
+## Phase 3A Connector And Setup Contracts
+
+These endpoints are future contracts only. Phase 3A implements local deterministic UI, types, and helpers.
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/projects/{projectId}/connectors` | List workspace connector configurations and plan availability. |
+| `POST` | `/api/projects/{projectId}/connectors` | Future create connector from an owner-approved template. |
+| `GET` | `/api/projects/{projectId}/allowed-targets` | List workspace allowlisted targets. |
+| `POST` | `/api/projects/{projectId}/allowed-targets` | Future add target with risk/approval policy. |
+| `POST` | `/api/projects/{projectId}/native-events` | Future AgentOps Native Protocol ingest endpoint. |
+| `GET` | `/api/built-in-agents` | List owner-published built-in AgentOps agents. |
+| `GET` | `/api/projects/{projectId}/setup` | Get workspace setup state and health checks. |
+| `GET` | `/api/projects/{projectId}/usage` | Get plan usage and limit status. |
+| `GET` | `/api/owner/control-plane` | Future owner-only platform controls. |
+
+Security/RBAC notes:
+
+- Connector creation requires server-side RBAC and plan checks.
+- Native events require hashed token verification, schema validation, replay protection, and audit attribution.
+- Allowed targets must be deny-by-default and environment-aware.
+- Owner control endpoints are not customer workspace settings.
+- No raw secret values should be returned by any endpoint.
