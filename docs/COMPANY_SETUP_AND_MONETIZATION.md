@@ -65,3 +65,13 @@ Customers cannot configure:
 ## Future Enforcement
 
 Plan and usage enforcement must be server-side in future backend phases. Client-side labels are explanatory only.
+
+## Phase 3B Plan UX
+
+Plans are now presented as product packaging:
+
+- Pro is the recommended conceptual plan.
+- Free Demo, Starter, Pro, and Enterprise/Self-hosted are compared side by side.
+- Usage meters show current local demo consumption.
+- A feature matrix explains what unlocks built-in agents, Native Protocol, webhook, SDK, MCP, private workers, and audit export.
+- No real payments, Stripe code, checkout, billing portal, invoices, or webhooks are implemented.

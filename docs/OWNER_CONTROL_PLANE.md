@@ -60,3 +60,9 @@ If unrestricted source code is delivered to a customer, it cannot be fully prote
 - Audit logs for owner actions.
 - Separate owner and customer admin routes.
 - Deployment/package controls for enterprise distribution.
+
+## Phase 3B Local Boundary
+
+Owner Control is Founder/Admin only in the local demo. Non-owner roles that directly visit `/owner-control` see a locked page instead of global deployment, connector, pricing, license, security, worker, or marketplace controls.
+
+This is a product logic preview, not production security. Future backend enforcement must check platform owner identity before returning owner-control data or accepting owner-control actions.

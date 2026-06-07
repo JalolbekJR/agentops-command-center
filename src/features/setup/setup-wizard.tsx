@@ -1,69 +1,112 @@
+"use client";
+
+import { ActionButton } from "@/components/action-button";
 import { PageHeader } from "@/components/page-header";
+import { PermissionBadge } from "@/components/permission-badge";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockAllowedTargets } from "@/data/mock-connectors";
 import { mockDeploymentModes, mockSetupHealthChecks, mockSetupSteps } from "@/data/mock-setup";
+import { useDemoState } from "@/lib/demo-state";
+import { getRouteAccess, canEditWorkspaceSetup } from "@/lib/role-access";
 import { getSetupHealthTone, getSetupStepTone, summarizeSetupHealth } from "@/lib/setup-health";
 
+const selectedMode = mockDeploymentModes.find((mode) => mode.mode === "hosted_saas") ?? mockDeploymentModes[0];
+const nextStep = mockSetupSteps.find((step) => step.status === "needs_input") ?? mockSetupSteps[0];
+
 export function SetupWizard() {
+  const { selectedRole } = useDemoState();
+  const access = getRouteAccess(selectedRole, "/setup");
+  const canEdit = canEditWorkspaceSetup(selectedRole);
+
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Setup foundation"
-        title="Configure the path from safe demo to real agent operations."
-        description="This setup model separates owner controls from customer workspace setup while keeping the current app deterministic and local."
+        eyebrow="Setup"
+        title="Guided setup for governed agent operations."
+        description="Choose the deployment path, separate owner controls from workspace setup, and move through the checklist without exposing platform-global settings."
+        action={<PermissionBadge level={access.level} />}
       />
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        {mockDeploymentModes.map((mode) => (
-          <article key={mode.mode} className="data-card">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-white">{mode.label}</p>
-                <p className="muted-copy mt-2 text-sm">{mode.bestFor}</p>
-              </div>
-              <StatusBadge label={mode.mode === "hosted_saas" ? "recommended" : "mode"} tone={mode.mode === "hosted_saas" ? "success" : "info"} />
-            </div>
-            <div className="mt-4 space-y-3">
-              <div className="data-card-muted p-3">
-                <p className="meta-label">Owner controls</p>
-                <p className="muted-copy mt-2 text-sm">{mode.ownerControls.join(", ")}</p>
-              </div>
-              <div className="data-card-muted p-3">
-                <p className="meta-label">Workspace controls</p>
-                <p className="muted-copy mt-2 text-sm">{mode.customerControls.join(", ")}</p>
-              </div>
-            </div>
-            <p className="subtle-copy mt-4 text-xs">{mode.protectionNotes[0]}</p>
-          </article>
-        ))}
+      <div className="notice-card notice-card-neutral flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold text-slate-100">Recommended path: {selectedMode.label}</p>
+          <p className="muted-copy mt-1 text-sm">Best for small teams that want fast setup, safe defaults, and no private worker complexity.</p>
+        </div>
+        <ActionButton disabled={!canEdit} variant="primary">
+          Continue setup
+        </ActionButton>
       </div>
 
-      <SectionCard title="Setup wizard" description="The steps are modeled locally now; backend enforcement and worker checks come later.">
-        <div className="grid gap-3 lg:grid-cols-2">
-          {mockSetupSteps.map((step) => (
-            <article key={step.id} className="data-card">
-              <div className="flex items-start gap-3">
-                <div className="timeline-index">{step.sequence}</div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-white">{step.title}</p>
-                      <p className="muted-copy mt-1 text-sm">{step.summary}</p>
-                    </div>
-                    <StatusBadge label={step.status} tone={getSetupStepTone(step.status)} />
-                  </div>
-                  <p className="subtle-copy mt-3 text-xs">Owner level: {step.ownerLevel.replaceAll("_", " ")}. Required plan: {step.requiredPlan.replaceAll("_", " ")}.</p>
-                  <p className="data-card-muted mt-3 p-3 text-xs leading-5 text-slate-400">{step.securityNotes[0]}</p>
+      <section className="grid gap-4 xl:grid-cols-3">
+        {mockDeploymentModes.map((mode) => {
+          const isSelected = mode.mode === selectedMode.mode;
+
+          return (
+            <article key={mode.mode} className={["data-card", isSelected ? "border-white/[0.18] bg-white/[0.045]" : ""].join(" ")}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white">{mode.label}</p>
+                  <p className="muted-copy mt-2 text-sm">{mode.bestFor}</p>
+                </div>
+                <StatusBadge label={isSelected ? "selected" : "available"} tone={isSelected ? "success" : "info"} />
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <div className="detail-tile">
+                  <p className="meta-label">Owner controls</p>
+                  <p className="muted-copy mt-2 text-sm">{mode.ownerControls.slice(0, 3).join(", ")}</p>
+                </div>
+                <div className="detail-tile">
+                  <p className="meta-label">Workspace setup</p>
+                  <p className="muted-copy mt-2 text-sm">{mode.customerControls.slice(0, 3).join(", ")}</p>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-      </SectionCard>
 
-      <div className="grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
-        <SectionCard title="Setup health" description={summarizeSetupHealth(mockSetupHealthChecks)}>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <StatusBadge label={mode.mode === "self_hosted_enterprise" ? "enterprise" : mode.mode === "local_developer" ? "demo safe" : "recommended path"} tone={isSelected ? "success" : "neutral"} />
+                <StatusBadge label={mode.mode === "self_hosted_enterprise" ? "high effort" : mode.mode === "hosted_saas" ? "low effort" : "developer"} tone="info" />
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+        <SectionCard
+          title="Setup checklist"
+          description={`Next step: ${nextStep.title}. ${summarizeSetupHealth(mockSetupHealthChecks)}`}
+          action={<ActionButton disabled={!canEdit || nextStep.status === "future_backend"}>Next step</ActionButton>}
+        >
+          <div className="space-y-3">
+            {mockSetupSteps.map((step) => {
+              const isNext = step.id === nextStep.id;
+
+              return (
+                <article key={step.id} className={["data-card-muted p-4", isNext ? "border-white/[0.16] bg-white/[0.04]" : ""].join(" ")}>
+                  <div className="flex items-start gap-3">
+                    <div className="timeline-index">{step.sequence}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-white">{step.title}</p>
+                          <p className="muted-copy mt-1 text-sm">{step.summary}</p>
+                        </div>
+                        <StatusBadge label={step.status} tone={getSetupStepTone(step.status)} />
+                      </div>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <StatusBadge label={step.ownerLevel.replaceAll("_", " ")} tone={step.ownerLevel === "platform_owner" ? "warning" : "info"} />
+                        <StatusBadge label={step.requiredPlan.replaceAll("_", " ")} tone="neutral" />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Health and boundaries" description="One control lane for platform owner; one for customer workspace setup.">
           <div className="space-y-3">
             {mockSetupHealthChecks.map((check) => (
               <div key={check.id} className="data-card-muted p-4">
@@ -74,27 +117,25 @@ export function SetupWizard() {
                   </div>
                   <StatusBadge label={check.status} tone={getSetupHealthTone(check.status)} />
                 </div>
-                <p className="subtle-copy mt-3 text-xs">{check.remediation}</p>
               </div>
             ))}
           </div>
         </SectionCard>
-
-        <SectionCard title="Allowed targets" description="Public demo targets are local or reserved demo patterns only.">
-          <div className="grid gap-3 sm:grid-cols-2">
-            {mockAllowedTargets.map((target) => (
-              <article key={target.id} className="data-card-muted p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-sm font-semibold text-white">{target.label}</p>
-                  <StatusBadge label={target.requiresApproval ? "approval" : "allowed"} tone={target.requiresApproval ? "warning" : "success"} />
-                </div>
-                <p className="mono-token mt-3 break-words text-xs">{target.targetPattern}</p>
-                <p className="muted-copy mt-3 text-sm">{target.notes}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
       </div>
+
+      <SectionCard title="Safe targets" description="The setup flow only offers allowlisted local or reserved demo targets.">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {mockAllowedTargets.map((target) => (
+            <article key={target.id} className="data-card-muted p-4">
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-sm font-semibold text-white">{target.label}</p>
+                <StatusBadge label={target.requiresApproval ? "approval" : "allowed"} tone={target.requiresApproval ? "warning" : "success"} />
+              </div>
+              <p className="mono-token mt-3 break-words text-xs">{target.targetPattern}</p>
+            </article>
+          ))}
+        </div>
+      </SectionCard>
     </div>
   );
 }

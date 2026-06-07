@@ -26,7 +26,18 @@ export type PermissionKey =
   | "browserQa.write"
   | "cost.read"
   | "audit.read"
-  | "rbac.manage";
+  | "rbac.manage"
+  | "platform.setup.read"
+  | "platform.setup.write"
+  | "platform.connectors.read"
+  | "platform.connectors.write"
+  | "platform.builtInAgents.read"
+  | "platform.builtInAgents.publish"
+  | "platform.agentBuilder.read"
+  | "platform.agentBuilder.write"
+  | "platform.plans.read"
+  | "platform.plans.manage"
+  | "platform.ownerControl.manage";
 
 export interface RoleDefinition {
   name: RoleName;

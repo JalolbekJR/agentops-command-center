@@ -2,38 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navGroups = [
-  {
-    label: "Operations",
-    items: [
-      { href: "/dashboard", label: "Overview", code: "OV" },
-      { href: "/agents", label: "Agents", code: "AG" },
-      { href: "/workflows", label: "Workflows", code: "WF" },
-      { href: "/runs", label: "Runs", code: "RN" },
-      { href: "/approvals", label: "Approvals", code: "AP" },
-      { href: "/evaluations", label: "Evaluations", code: "EV" },
-      { href: "/risks", label: "Risks", code: "RK" },
-      { href: "/browser-qa", label: "Browser QA", code: "QA" },
-      { href: "/audit", label: "Audit", code: "AU" }
-    ]
-  },
-  {
-    label: "Platform",
-    items: [
-      { href: "/setup", label: "Setup", code: "SU" },
-      { href: "/connectors", label: "Connectors", code: "CN" },
-      { href: "/built-in-agents", label: "Built-in Agents", code: "BA" },
-      { href: "/agent-builder", label: "Agent Builder", code: "AB" },
-      { href: "/plans", label: "Plans", code: "PL" },
-      { href: "/owner-control", label: "Owner Control", code: "OC" },
-      { href: "/settings", label: "Settings", code: "ST" }
-    ]
-  }
-] as const;
+import { useDemoState } from "@/lib/demo-state";
+import { getNavigationGroups } from "@/lib/navigation-policy";
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const { isRoleReady, selectedRole } = useDemoState();
+
+  if (!isRoleReady) {
+    return (
+      <nav className="space-y-2 px-1" aria-label="Primary navigation">
+        <div className="rounded-md border border-white/[0.05] bg-white/[0.025] px-3 py-2 text-xs text-slate-500">
+          Loading role navigation...
+        </div>
+      </nav>
+    );
+  }
+
+  const navGroups = getNavigationGroups(selectedRole);
 
   return (
     <nav className="space-y-5 px-1" aria-label="Primary navigation">
@@ -43,6 +29,24 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
           <div className="space-y-0.5">
             {group.items.map((item) => {
               const isActive = pathname === item.href || (pathname === "/" && item.href === "/dashboard");
+
+              if (item.state === "locked") {
+                return (
+                  <div
+                    key={item.href}
+                    title={item.reason}
+                    aria-disabled="true"
+                    className={[
+                      "nav-link nav-link-locked",
+                      isActive ? "nav-link-active" : ""
+                    ].join(" ")}
+                  >
+                    <span className="nav-initial">{item.code}</span>
+                    <span className="min-w-0 truncate">{item.label}</span>
+                    <span className="nav-lock-pill">Locked</span>
+                  </div>
+                );
+              }
 
               return (
                 <Link

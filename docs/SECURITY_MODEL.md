@@ -247,6 +247,19 @@ Rules:
 - Owner-only settings require future server-side authorization and audit logs.
 - Self-hosted/source distribution cannot fully prevent reverse engineering; hosted SaaS or controlled licensed packages are safer.
 
+## Phase 3B Local Access Modeling
+
+Phase 3B adds local deterministic route gates and role-aware navigation for Setup, Connectors, Built-in Agents, Agent Builder, Plans, and Owner Control.
+
+Security rules:
+
+- Owner Control renders only for Founder/Admin in the local demo.
+- Locked direct URLs must not render sensitive owner-control content.
+- Viewer cannot access Setup, Agent Builder, Owner Control, approvals, or audit-only navigation.
+- Role-aware UI states are not trusted authorization.
+- Future backend routes must enforce the same route, action, plan, connector, and owner-control permissions server-side.
+- Locked UI should explain the boundary without revealing sensitive global policy internals.
+
 ## Security Acceptance Criteria
 
 - A reviewer can explain who can approve each risky action.

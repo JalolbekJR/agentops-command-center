@@ -58,6 +58,21 @@
 | Owner Control Plane | A owner-only demo view | - | - | - | - | - |
 | Comments | A | W | W | W | W | - |
 
+## Phase 3B Local Route Gates
+
+Phase 3B adds deterministic client-side gates for the new platform routes. This improves demo logic and prevents sensitive owner-only UI from rendering under the wrong role, but it is not production authorization.
+
+| Route | Founder/Admin | AI Engineer | QA Reviewer | Security Reviewer | Product Manager | Viewer |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/setup` | Full | Workspace configure | Locked | Locked | Read-only | Locked |
+| `/connectors` | Full | Workspace configure | Locked | Security review | Product packaging read | Redacted read |
+| `/built-in-agents` | Full/catalog owner | Use available modules | Read-only | Read-only | Product packaging read | Redacted read |
+| `/agent-builder` | Full | Workspace builder | Template preview | Security preview | Product preview | Locked |
+| `/plans` | Full/manage concept | Read-only | Read-only | Read-only | Product packaging read | Public-safe read |
+| `/owner-control` | Full owner-only | Locked | Locked | Locked | Locked | Locked |
+
+Direct URL access to locked routes renders a locked page with the current role, required access, reason, recommended alternative, and a reminder that the future backend must enforce these rules server-side.
+
 ## High-Risk Action Approval Requirements
 
 | Action | Required Approval | Audit Required | Notes |
@@ -96,6 +111,7 @@
 - Viewer is never a fallback role for hidden admin actions.
 - Customer workspace roles cannot change global connector templates, pricing rules, license rules, built-in agent publishing, deployment defaults, or owner-only security policies.
 - Future backend must separate platform owner authorization from customer workspace administration.
+- Client-side locked states are presentation and demo logic only. Future API handlers must repeat these checks before returning sensitive data.
 
 ## Future Enterprise Permissions Model
 

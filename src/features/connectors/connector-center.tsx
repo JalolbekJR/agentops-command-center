@@ -1,32 +1,130 @@
+"use client";
+
+import { useState } from "react";
+import { ActionButton } from "@/components/action-button";
 import { PageHeader } from "@/components/page-header";
+import { PermissionBadge } from "@/components/permission-badge";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
 import { mockConnectors } from "@/data/mock-connectors";
 import { mockWorkspacePlans } from "@/data/mock-plans";
 import { connectorSecuritySummary, getConnectorCapabilities, isConnectorAllowedForPlan } from "@/lib/connector-policy";
+import { nativeProtocolMappings } from "@/lib/agent-protocol";
+import { useDemoState } from "@/lib/demo-state";
+import { canUseConnector, getRouteAccess } from "@/lib/role-access";
+
+type ConnectorFilter = "recommended" | "demo" | "pro" | "enterprise" | "future";
 
 const currentPlan = mockWorkspacePlans.find((plan) => plan.id === "pro") ?? mockWorkspacePlans[0];
+const filters: Array<{ id: ConnectorFilter; label: string }> = [
+  { id: "recommended", label: "Recommended" },
+  { id: "demo", label: "Available in demo" },
+  { id: "pro", label: "Pro" },
+  { id: "enterprise", label: "Enterprise" },
+  { id: "future", label: "Future" }
+];
 
 export function ConnectorCenter() {
+  const { selectedRole } = useDemoState();
+  const access = getRouteAccess(selectedRole, "/connectors");
+  const [activeFilter, setActiveFilter] = useState<ConnectorFilter>("recommended");
+
+  const filteredConnectors = mockConnectors.filter((connector) => {
+    if (activeFilter === "recommended") {
+      return connector.isRecommended;
+    }
+
+    if (activeFilter === "demo") {
+      return connector.status === "demo_ready";
+    }
+
+    if (activeFilter === "pro") {
+      return connector.minimumPlan === "pro";
+    }
+
+    if (activeFilter === "enterprise") {
+      return connector.minimumPlan === "enterprise_self_hosted";
+    }
+
+    return connector.status === "future";
+  });
+
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Connector center"
-        title="Connect built-in, custom, worker, and trace-based agents safely."
-        description="AgentOps Native Protocol is the recommended custom-agent path because it maps cleanly into timelines, tools, approvals, risks, evaluations, costs, and audit logs."
+        title="Integration hub for built-in, custom, worker, and trace-based agents."
+        description="Native Protocol is the preferred custom-agent path. Built-in AgentOps Agent remains the fastest safe demo path."
+        action={<PermissionBadge level={access.level} />}
       />
 
-      <SectionCard
-        title="Connection methods"
-        description={`Plan context: ${currentPlan.name}. Availability is local deterministic UI only.`}
-      >
-        <div className="grid gap-4 xl:grid-cols-2">
-          {mockConnectors.map((connector) => {
-            const available = isConnectorAllowedForPlan(connector, currentPlan);
+      <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <article className="data-card">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-white">Recommended connection path</p>
+              <p className="muted-copy mt-2 text-sm">Start with built-in Website QA, then graduate custom agents to AgentOps Native Protocol when backend ingestion exists.</p>
+            </div>
+            <StatusBadge label={currentPlan.name} tone="success" />
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="detail-tile">
+              <p className="meta-label">Fastest demo</p>
+              <p className="mt-1 text-sm font-semibold text-white">Built-in AgentOps Agent</p>
+            </div>
+            <div className="detail-tile">
+              <p className="meta-label">Best custom path</p>
+              <p className="mt-1 text-sm font-semibold text-white">Native Protocol</p>
+            </div>
+            <div className="detail-tile">
+              <p className="meta-label">Security posture</p>
+              <p className="mt-1 text-sm font-semibold text-white">Allowlist + audit</p>
+            </div>
+          </div>
+        </article>
+
+        <article className="data-card">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-white">Native Protocol event preview</p>
+              <p className="muted-copy mt-2 text-sm">The custom-agent contract maps structured events into runs, tools, risks, evaluations, costs, and audit records.</p>
+            </div>
+            <StatusBadge label="recommended" tone="success" />
+          </div>
+          <div className="mt-4 space-y-2">
+            {nativeProtocolMappings.slice(0, 4).map((mapping) => (
+              <div key={mapping.eventCategory} className="data-card-muted flex items-center justify-between gap-3 p-3">
+                <span className="mono-token text-xs">{mapping.eventCategory}</span>
+                <span className="text-xs text-slate-400">{mapping.mapsTo.slice(0, 2).join(" + ")}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+      </div>
+
+      <SectionCard title="Connector methods" description="Role and plan state determine whether actions are configurable, read-only, locked by plan, or backend-enforced later.">
+        <div className="sidebar-scroll -mx-1 flex gap-2 overflow-x-auto px-1 pb-2">
+          {filters.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              onClick={() => setActiveFilter(filter.id)}
+              className={["secondary-action shrink-0", activeFilter === filter.id ? "border-white/[0.16] bg-white/[0.075] text-white" : ""].join(" ")}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          {filteredConnectors.map((connector) => {
+            const planAvailable = isConnectorAllowedForPlan(connector, currentPlan);
+            const roleCanUse = canUseConnector(selectedRole, connector, currentPlan);
             const capabilities = getConnectorCapabilities(connector.type);
+            const disabledReason = !planAvailable ? "Locked by plan" : connector.status === "future" ? "Future backend" : !roleCanUse ? "Read-only role" : "Use in builder";
 
             return (
-              <article key={connector.id} className="data-card">
+              <article key={connector.id} className={["data-card", connector.isRecommended ? "border-white/[0.16] bg-white/[0.04]" : ""].join(" ")}>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -40,7 +138,7 @@ export function ConnectorCenter() {
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-3">
                   <div className="detail-tile">
-                    <p className="meta-label">Difficulty</p>
+                    <p className="meta-label">Setup</p>
                     <p className="mt-1 text-sm font-semibold text-white">{connector.setupDifficulty}</p>
                   </div>
                   <div className="detail-tile">
@@ -48,7 +146,7 @@ export function ConnectorCenter() {
                     <p className="mt-1 text-sm font-semibold text-white">{connector.privacyLevel.replaceAll("_", " ")}</p>
                   </div>
                   <div className="detail-tile">
-                    <p className="meta-label">Plan</p>
+                    <p className="meta-label">Minimum plan</p>
                     <p className="mt-1 text-sm font-semibold text-white">{connector.minimumPlan.replaceAll("_", " ")}</p>
                   </div>
                 </div>
@@ -57,12 +155,19 @@ export function ConnectorCenter() {
                 <p className="data-card-muted mt-3 p-3 text-xs leading-5 text-slate-400">{connectorSecuritySummary(connector)}</p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <StatusBadge label={available ? "plan available" : "plan locked"} tone={available ? "success" : "warning"} />
-                  {capabilities.slice(0, 5).map((capability) => (
+                  <StatusBadge label={planAvailable ? "plan available" : "locked by plan"} tone={planAvailable ? "success" : "warning"} />
+                  {capabilities.slice(0, 4).map((capability) => (
                     <span key={capability} className="mono-token rounded-md border border-white/[0.075] bg-white/[0.035] px-2 py-1 text-[11px]">
                       {capability}
                     </span>
                   ))}
+                </div>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <ActionButton disabled={connector.status === "future"}>View setup</ActionButton>
+                  <ActionButton disabled={!roleCanUse || connector.status === "future"} variant={roleCanUse ? "primary" : "secondary"}>
+                    {disabledReason}
+                  </ActionButton>
                 </div>
               </article>
             );

@@ -199,6 +199,31 @@ input {
   color: var(--text-strong);
 }
 
+.nav-link-locked {
+  cursor: not-allowed;
+  color: rgba(148, 163, 184, 0.5);
+}
+
+.nav-link-locked:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(148, 163, 184, 0.62);
+}
+
+.nav-lock-pill {
+  margin-left: auto;
+  max-width: 5rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 999px;
+  padding: 0.12rem 0.38rem;
+  color: rgba(148, 163, 184, 0.58);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .nav-link-active {
   border-color: var(--line-muted);
   background: rgba(255, 255, 255, 0.065);
@@ -480,12 +505,16 @@ input {
 .secondary-action {
   display: inline-flex;
   min-height: 2.5rem;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-control);
   padding: 0.56rem 0.95rem;
+  text-align: center;
+  text-decoration: none;
   font-size: 0.875rem;
   font-weight: 700;
+  white-space: nowrap;
   transition:
     background-color 150ms ease,
     border-color 150ms ease,
@@ -498,7 +527,7 @@ input {
   color: var(--text-strong);
 }
 
-.primary-action:hover {
+.primary-action:hover:not(:disabled) {
   background: rgba(238, 242, 247, 0.15);
 }
 
@@ -508,8 +537,42 @@ input {
   color: var(--text);
 }
 
-.secondary-action:hover {
+.secondary-action:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.065);
+}
+
+.marketplace-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+}
+
+.settings-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.settings-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.settings-disclosure > summary::after {
+  content: "Show";
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  padding: 0.16rem 0.45rem;
+  color: rgba(148, 163, 184, 0.72);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.settings-disclosure[open] > summary::after {
+  content: "Hide";
 }
 
 .status-badge {
@@ -618,6 +681,14 @@ input {
   border-color: var(--line-muted);
   background: rgba(255, 255, 255, 0.025);
   color: rgba(148, 163, 184, 0.55);
+}
+
+.primary-action:disabled,
+.secondary-action:disabled {
+  cursor: not-allowed;
+  border-color: var(--line-muted);
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(148, 163, 184, 0.58);
 }
 
 .decision-approve:not(:disabled) {

@@ -35,6 +35,20 @@ Website QA Agent is the recommended first template:
 - Keep future backend enforcement visible but not over-explained.
 - Never imply a real agent was created or executed in Phase 3A.
 
+## Phase 3B UX Rules
+
+The Agent Builder is now modeled as a creation studio:
+
+- Step navigation is visible.
+- Templates are selectable.
+- Website QA Agent is the recommended first build.
+- Role locks and plan locks are visible before actions.
+- Read-only roles can preview templates without creating drafts.
+- Viewer receives a locked page.
+- A live preview shows generated workflow outline, Native Protocol event categories, safe targets, approval gates, usage estimate, and final summary.
+
+Execution is still not implemented. The UI creates no real agents, connectors, workers, browser sessions, or external calls.
+
 ## Output Model
 
 The builder should produce a review summary with:

@@ -4,13 +4,15 @@ AgentOps Command Center is a portfolio-grade enterprise dashboard concept for co
 
 ## Status
 
-Current phase: **Phase 3A - secure agent platform foundation, connector/setup model, built-in agent catalog, owner controls, and monetization planning**.
+Current phase: **Phase 3B - local product logic, role-aware access rules, route locking, and investor-grade platform UX polish**.
 
 Phase 1 documentation is complete and remains the source of truth for product, architecture, domain model, security, RBAC, API contracts, workflow engine, QA strategy, roadmap, and portfolio positioning.
 
 Phase 2 introduced a manually created Next.js App Router scaffold with TypeScript, Tailwind CSS, typed domain models, deterministic mock data, route structure, reusable components, and a premium responsive shell.
 
-Phase 3A extends the same architecture with local deterministic models for agent connection methods, AgentOps Native Agent Protocol, built-in AgentOps agents, setup modes, owner-only controls, AI Agent Builder foundation, and plan/usage limits. It does not add real auth, database persistence, agent execution, external APIs, payments, deployment, or secrets.
+Phase 3A extends the same architecture with local deterministic models for agent connection methods, AgentOps Native Agent Protocol, built-in AgentOps agents, setup modes, owner-only controls, AI Agent Builder foundation, and plan/usage limits.
+
+Phase 3B adds deterministic client-side access modeling for the platform pages, role-aware sidebar visibility/locking, direct URL locked states, and more product-grade Setup, Connectors, Built-in Agents, Agent Builder, Plans, and Owner Control surfaces. It still does not add real auth, database persistence, agent execution, external APIs, payments, deployment, or secrets.
 
 Honest scope: this is a portfolio/demo system in progress. It is designed to demonstrate production-minded engineering decisions, but it does not yet include a live backend, real AI integrations, real browser recordings, production customers, or deployed infrastructure.
 
@@ -146,6 +148,7 @@ The current scaffold uses local deterministic mock data only. It does not connec
 - Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, seed data, and first dashboard UI.
 - Phase 3: Premium UI shell and dashboard overview.
 - Phase 3A: Secure agent platform foundation, connector/setup model, owner controls, built-in agents, Native Protocol, builder UI, and plan limits.
+- Phase 3B: Local RBAC product logic, route gates, role-aware navigation, and premium platform UX.
 - Phase 4: Mock interactions, role switcher, filters, approvals, and run details.
 - Phase 5: Workflow simulation, deterministic event replay, evaluation, and risk logic.
 - Phase 6: Tests, browser QA, accessibility, performance checks, and release gates.

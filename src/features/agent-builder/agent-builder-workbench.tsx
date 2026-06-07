@@ -1,103 +1,350 @@
+"use client";
+
+import { useRef, useState } from "react";
+import { ActionButton } from "@/components/action-button";
 import { PageHeader } from "@/components/page-header";
+import { PermissionBadge } from "@/components/permission-badge";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
-import { mockAgentBuilderReview, mockAgentBuilderSteps, mockAgentBuilderTemplates } from "@/data/mock-agent-builder";
+import { mockAgentBuilderReview, mockAgentBuilderTemplates } from "@/data/mock-agent-builder";
 import { mockAllowedTargets } from "@/data/mock-connectors";
 import { mockWorkspacePlans } from "@/data/mock-plans";
-import { getRecommendedBuilderTemplate, getTemplateAvailabilityLabel, isAgentTemplateAvailableForPlan } from "@/lib/agent-builder";
+import { nativeProtocolMappings } from "@/lib/agent-protocol";
+import { isAgentTemplateAvailableForPlan } from "@/lib/agent-builder";
+import { useDemoState } from "@/lib/demo-state";
+import { canUseAgentBuilder, canUseAgentTemplate, getRouteAccess } from "@/lib/role-access";
 
 const currentPlan = mockWorkspacePlans.find((plan) => plan.id === "free_demo") ?? mockWorkspacePlans[0];
-const recommendedTemplate = getRecommendedBuilderTemplate(mockAgentBuilderTemplates);
+
+const builderSteps = [
+  { id: "template", label: "Template" },
+  { id: "connection", label: "Connection" },
+  { id: "capabilities", label: "Capabilities" },
+  { id: "targets", label: "Targets" },
+  { id: "approvals", label: "Approvals" },
+  { id: "limits", label: "Limits" },
+  { id: "workflow", label: "Workflow" },
+  { id: "test", label: "Safe test" }
+] as const;
+
+const templateStudioCopy: Record<
+  string,
+  {
+    subtitle: string;
+    body: string;
+    connection: string;
+    plan: string;
+    risk: string;
+    status: string;
+    targetIds: string[];
+    workflow: string[];
+  }
+> = {
+  template_website_qa: {
+    subtitle: "Recommended first demo agent",
+    body: "Checks local routes, responsive states, console signals, and release-readiness evidence.",
+    connection: "Built-in AgentOps Agent",
+    plan: "Free Demo",
+    risk: "Medium",
+    status: "Available",
+    targetIds: ["target_local_dashboard", "target_demo_domain", "target_staging_release"],
+    workflow: ["Select allowlisted route", "Run QA checks", "Capture evidence", "Score release readiness", "Create audit summary"]
+  },
+  template_native_custom: {
+    subtitle: "Best custom path",
+    body: "For company agents that can emit structured AgentOps events.",
+    connection: "Native Protocol",
+    plan: "Pro",
+    risk: "Medium",
+    status: "Locked in demo",
+    targetIds: ["target_local_dashboard", "target_demo_domain", "target_demo_repository"],
+    workflow: ["Register agent identity", "Validate event schema", "Ingest run events", "Map tools/artifacts/risks", "Create audit timeline"]
+  },
+  template_private_worker: {
+    subtitle: "Enterprise private execution",
+    body: "For sensitive environments that need company-controlled worker execution.",
+    connection: "Private Worker",
+    plan: "Enterprise/Self-hosted",
+    risk: "High",
+    status: "Enterprise required",
+    targetIds: ["target_staging_release", "target_demo_repository"],
+    workflow: ["Register private worker", "Verify worker health", "Execute allowlisted job", "Return redacted evidence", "Record approval/audit event"]
+  }
+};
+
+function getTemplateCopy(templateId: string) {
+  return templateStudioCopy[templateId] ?? templateStudioCopy.template_website_qa;
+}
+
+function getTemplateActionState({ available, canUse }: { available: boolean; canUse: boolean }) {
+  if (!available) {
+    return { disabled: true, label: "Upgrade required", variant: "secondary" as const };
+  }
+
+  if (!canUse) {
+    return { disabled: true, label: "Role locked", variant: "secondary" as const };
+  }
+
+  return { disabled: false, label: "Use this template", variant: "primary" as const };
+}
 
 export function AgentBuilderWorkbench() {
+  const { selectedRole } = useDemoState();
+  const access = getRouteAccess(selectedRole, "/agent-builder");
+  const canEdit = canUseAgentBuilder(selectedRole);
+  const configSectionRef = useRef<HTMLElement>(null);
+  const [selectedTemplateId, setSelectedTemplateId] = useState("template_website_qa");
+  const [activeStepId, setActiveStepId] = useState<(typeof builderSteps)[number]["id"]>("template");
+  const [draftTemplateId, setDraftTemplateId] = useState<string | null>(null);
+  const selectedTemplate = mockAgentBuilderTemplates.find((template) => template.id === selectedTemplateId) ?? mockAgentBuilderTemplates[0];
+  const selectedCopy = getTemplateCopy(selectedTemplate.id);
+  const templatePlanAvailable = isAgentTemplateAvailableForPlan(selectedTemplate, currentPlan);
+  const templateUsable = canUseAgentTemplate(selectedRole, selectedTemplate, currentPlan);
+  const selectedTargets = mockAllowedTargets.filter((target) => selectedCopy.targetIds.includes(target.id));
+  const draftCreated = draftTemplateId === selectedTemplate.id;
+
+  function selectTemplate(templateId: string) {
+    setSelectedTemplateId(templateId);
+    setActiveStepId("template");
+    setDraftTemplateId(null);
+  }
+
+  function focusConfiguration(templateId: string) {
+    setSelectedTemplateId(templateId);
+    setActiveStepId("connection");
+    setDraftTemplateId(null);
+    window.setTimeout(() => {
+      configSectionRef.current?.focus({ preventScroll: true });
+      configSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  }
+
+  function createDraft() {
+    if (templateUsable) {
+      setDraftTemplateId(selectedTemplate.id);
+      setActiveStepId("workflow");
+    }
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <PageHeader
         eyebrow="Agent Builder"
-        title="Create an agent setup plan without unsafe execution."
-        description="This studio models template choice, connection method, capabilities, targets, approvals, privacy, usage limits, workflow outline, and future safe test steps."
+        title="Build a governed agent draft."
+        description="Choose a safe template, review the execution boundary, and prepare a local draft without running agents or calling external services."
+        action={<PermissionBadge level={access.level} />}
       />
 
-      <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-        <SectionCard title="Template selection" description="Website QA is the recommended first path for a real demo later.">
-          <div className="space-y-3">
-            {mockAgentBuilderTemplates.map((template) => {
-              const available = isAgentTemplateAvailableForPlan(template, currentPlan);
-
-              return (
-                <article key={template.id} className={["data-card-muted p-4", template.id === recommendedTemplate.id ? "border-white/[0.14]" : ""].join(" ")}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white">{template.name}</p>
-                      <p className="muted-copy mt-1 text-sm">{template.summary}</p>
-                    </div>
-                    <StatusBadge label={getTemplateAvailabilityLabel(template, currentPlan)} tone={available ? "success" : "warning"} />
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="mono-token rounded-md border border-white/[0.075] bg-white/[0.035] px-2 py-1 text-[11px]">{template.connectorType}</span>
-                    <span className="mono-token rounded-md border border-white/[0.075] bg-white/[0.035] px-2 py-1 text-[11px]">{template.planRequired}</span>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Builder steps" description="Local UI foundation only; backend generation and safe test execution come later.">
-          <div className="space-y-3">
-            {mockAgentBuilderSteps.map((step, index) => (
-              <article key={step.id} className="data-card-muted p-4">
-                <div className="flex items-start gap-3">
-                  <div className="timeline-index">{index + 1}</div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-white">{step.title}</p>
-                        <p className="muted-copy mt-1 text-sm">{step.summary}</p>
-                      </div>
-                      <StatusBadge label={step.status} tone={step.status === "complete" ? "success" : step.status === "current" ? "warning" : "info"} />
-                    </div>
-                    <p className="subtle-copy mt-2 text-xs">Selected: {step.selectedLabel}</p>
-                    <p className="data-card-muted mt-3 p-3 text-xs leading-5 text-slate-400">{step.securityNote}</p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
+      <div className="notice-card notice-card-neutral flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-slate-100">Local creation studio</p>
+          <p className="muted-copy mt-1 text-sm">Drafts only. No browser runs, external connectors, secrets, or persistence.</p>
+        </div>
+        <StatusBadge label={canEdit ? "Builder enabled" : "Read-only role"} tone={canEdit ? "success" : "info"} />
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-2">
-        <SectionCard title="Allowed targets" description="Builder targets stay local/demo safe in this phase.">
-          <div className="grid gap-3 sm:grid-cols-2">
-            {mockAllowedTargets.slice(0, 3).map((target) => (
-              <article key={target.id} className="data-card-muted p-4">
-                <p className="text-sm font-semibold text-white">{target.label}</p>
-                <p className="mono-token mt-2 break-words text-xs">{target.targetPattern}</p>
-                <p className="subtle-copy mt-3 text-xs">{target.notes}</p>
-              </article>
-            ))}
+      <section className="section-card py-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="meta-label">Progress</p>
+            <p className="mt-1 text-sm text-slate-400">A compact local flow for future backend-enforced agent creation.</p>
           </div>
-        </SectionCard>
+          <StatusBadge label={draftCreated ? "Draft ready" : "Draft not created"} tone={draftCreated ? "success" : "neutral"} />
+        </div>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-8">
+          {builderSteps.map((step, index) => (
+            <button
+              key={step.id}
+              type="button"
+              onClick={() => setActiveStepId(step.id)}
+              className={["data-card-muted flex min-h-14 w-full items-center gap-3 p-3 text-left transition hover:bg-white/[0.05]", activeStepId === step.id ? "border-white/[0.16] bg-white/[0.06]" : ""].join(" ")}
+            >
+              <span className="timeline-index size-7 shrink-0 text-[0.68rem]">{index + 1}</span>
+              <span className="min-w-0 text-sm font-semibold leading-5 text-slate-200">{step.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-        <SectionCard title="Review summary" description="The generated outline maps directly into future Workflow and WorkflowRun entities.">
-          <div className="space-y-3">
-            <div className="data-card-muted p-4">
-              <p className="meta-label">Connection</p>
-              <p className="mt-2 text-sm font-semibold text-white">{mockAgentBuilderReview.connectionMethod.replaceAll("_", " ")}</p>
-              <p className="subtle-copy mt-2 text-xs">Privacy mode: {mockAgentBuilderReview.privacyMode.replaceAll("_", " ")}</p>
+      <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_25rem]">
+        <main className="min-w-0 space-y-5">
+          <SectionCard title="Choose a template" description="Website QA is the recommended first module because it produces visible, low-risk portfolio evidence.">
+            <div className="grid gap-4 lg:grid-cols-2">
+              {mockAgentBuilderTemplates.map((template) => {
+                const templateCopy = getTemplateCopy(template.id);
+                const isSelected = template.id === selectedTemplateId;
+                const available = isAgentTemplateAvailableForPlan(template, currentPlan);
+                const roleCanUse = canUseAgentTemplate(selectedRole, template, currentPlan);
+                const actionState = getTemplateActionState({ available, canUse: roleCanUse });
+                const secondaryDisabled = available && !roleCanUse;
+                const secondaryLabel = !available ? "View requirements" : roleCanUse ? "Configure" : "Role locked";
+
+                return (
+                  <article key={template.id} className={["data-card-muted flex min-h-[21rem] min-w-0 flex-col p-4", isSelected ? "border-white/[0.18] bg-white/[0.055]" : ""].join(" ")}>
+                    <div className="flex min-w-0 items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-base font-semibold leading-6 text-white">{template.name}</p>
+                        <p className="mt-1 text-sm font-medium text-slate-300">{templateCopy.subtitle}</p>
+                      </div>
+                      {isSelected ? <StatusBadge label="selected" tone="info" /> : null}
+                    </div>
+
+                    <p className="muted-copy mt-4 text-sm leading-6">{templateCopy.body}</p>
+
+                    <div className="mt-4 grid gap-2">
+                      {[
+                        ["Connection", templateCopy.connection],
+                        ["Plan", templateCopy.plan],
+                        ["Risk", templateCopy.risk],
+                        ["Status", available ? templateCopy.status : "Upgrade required"]
+                      ].map(([label, value]) => (
+                        <div key={label} className="flex min-w-0 items-center justify-between gap-3 rounded-md border border-white/[0.055] bg-white/[0.025] px-3 py-2">
+                          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-600">{label}</span>
+                          <span className="min-w-0 text-right text-sm font-semibold text-slate-200">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-auto grid gap-2 pt-5 sm:grid-cols-2">
+                      <ActionButton disabled={actionState.disabled} onClick={() => selectTemplate(template.id)} variant={actionState.variant} className="w-full">
+                        {actionState.label}
+                      </ActionButton>
+                      <ActionButton disabled={secondaryDisabled} onClick={() => focusConfiguration(template.id)} variant="secondary" className="w-full">
+                        {secondaryLabel}
+                      </ActionButton>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
+          </SectionCard>
+
+          <section ref={configSectionRef} tabIndex={-1} className="focus:outline-none">
+            <SectionCard title="Configure draft" description="Selected settings are local state only. Future backend phases must enforce the same policy server-side.">
+              <div className="grid gap-4 xl:grid-cols-2">
+                <article className="data-card-muted p-4">
+                  <p className="meta-label">Selected template</p>
+                  <h2 className="mt-2 text-lg font-semibold text-white">{selectedTemplate.name}</h2>
+                  <p className="muted-copy mt-2 text-sm">{selectedCopy.subtitle}</p>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <div className="detail-tile">
+                      <p className="meta-label">Connection</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{selectedCopy.connection}</p>
+                    </div>
+                    <div className="detail-tile">
+                      <p className="meta-label">Plan</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{selectedCopy.plan}</p>
+                    </div>
+                  </div>
+                </article>
+
+                <article className="data-card-muted p-4">
+                  <p className="meta-label">Capabilities</p>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {["Run events", "Artifacts", "Risk findings", "Evaluations"].map((capability) => (
+                      <div key={capability} className="rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-sm text-slate-300">
+                        {capability}
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="data-card-muted p-4">
+                  <p className="meta-label">Safe targets</p>
+                  <div className="mt-3 space-y-2">
+                    {selectedTargets.map((target) => (
+                      <div key={target.id} className="rounded-md border border-white/[0.06] bg-white/[0.03] p-3">
+                        <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-white">{target.label}</p>
+                            <p className="mono-token mt-1 break-words text-xs">{target.targetPattern}</p>
+                          </div>
+                          <StatusBadge label={target.requiresApproval ? "Approval" : "Allowed"} tone={target.requiresApproval ? "warning" : "success"} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+
+                <article className="data-card-muted p-4">
+                  <p className="meta-label">Approval gates and limits</p>
+                  <div className="mt-3 space-y-2">
+                    {mockAgentBuilderReview.approvalGates.map((gate) => (
+                      <div key={gate} className="rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-2 text-sm text-slate-300">
+                        {gate}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="muted-copy mt-4 text-sm">Plan limit: {mockAgentBuilderReview.usageLimitLabel}</p>
+                </article>
+              </div>
+            </SectionCard>
+          </section>
+        </main>
+
+        <aside className="section-card h-fit 2xl:sticky 2xl:top-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="meta-label">Live preview</p>
+              <h2 className="mt-2 text-lg font-semibold text-white">{selectedTemplate.name}</h2>
+              <p className="muted-copy mt-1 text-sm">{selectedCopy.connection}</p>
+            </div>
+            <StatusBadge label={templateUsable ? "Ready" : "Locked"} tone={templateUsable ? "success" : "warning"} />
+          </div>
+
+          <div className="mt-5 space-y-4">
             <div className="data-card-muted p-4">
-              <p className="meta-label">Generated workflow outline</p>
-              <div className="mt-3 space-y-2">
-                {mockAgentBuilderReview.generatedWorkflowOutline.map((step) => (
-                  <p key={step} className="text-sm text-slate-300">{step}</p>
+              <p className="meta-label">Workflow preview</p>
+              <div className="mt-3 space-y-3">
+                {selectedCopy.workflow.map((step, index) => (
+                  <div key={step} className="flex gap-3 text-sm text-slate-300">
+                    <span className="timeline-index size-6 shrink-0 text-[0.65rem]">{index + 1}</span>
+                    <span className="leading-5">{step}</span>
+                  </div>
                 ))}
               </div>
             </div>
-            <p className="data-card-muted p-3 text-xs leading-5 text-slate-400">{mockAgentBuilderReview.futureSafeTestSummary}</p>
+
+            <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-1">
+              <div className="detail-tile">
+                <p className="meta-label">Targets</p>
+                <p className="mt-1 text-sm font-semibold text-white">{selectedTargets.length} allowlisted</p>
+              </div>
+              <div className="detail-tile">
+                <p className="meta-label">Draft status</p>
+                <p className="mt-1 text-sm font-semibold text-white">{draftCreated ? "Local draft ready" : "Not created"}</p>
+              </div>
+            </div>
+
+            <div className="data-card-muted p-4">
+              <p className="meta-label">Native Protocol sample</p>
+              <div className="mt-3 space-y-2">
+                {nativeProtocolMappings.slice(0, 3).map((mapping) => (
+                  <div key={mapping.eventCategory} className="mono-token rounded-md bg-white/[0.035] px-3 py-2 text-xs">
+                    {mapping.eventCategory}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="data-card-muted p-4">
+              <p className="meta-label">Approval and plan summary</p>
+              <p className="muted-copy mt-2 text-sm">Gate: {mockAgentBuilderReview.approvalGates[0]}</p>
+              <p className="muted-copy mt-1 text-sm">Limit: {mockAgentBuilderReview.usageLimitLabel}</p>
+              <p className="muted-copy mt-1 text-sm">Safe test: queued for a later worker phase.</p>
+            </div>
+
+            <div className="data-card-muted p-4">
+              <p className="meta-label">Draft summary</p>
+              <p className="mt-2 text-sm font-semibold text-white">{draftCreated ? `${selectedTemplate.name} draft prepared` : "No draft created yet"}</p>
+              <p className="muted-copy mt-2 text-sm">This state is local to the browser session and does not persist data.</p>
+            </div>
+
+            <ActionButton disabled={!templateUsable} onClick={createDraft} variant={templateUsable ? "primary" : "secondary"} className="w-full">
+              {!templatePlanAvailable ? "Upgrade required" : templateUsable ? "Create local draft" : "Role locked"}
+            </ActionButton>
           </div>
-        </SectionCard>
+        </aside>
       </div>
     </div>
   );

@@ -4,10 +4,12 @@
   "private": true,
   "description": "Local deterministic demo scaffold for an AI agent operations command center.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "start": "next start"
   },
   "dependencies": {
     "next": "latest",

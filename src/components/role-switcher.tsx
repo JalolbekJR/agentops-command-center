@@ -6,7 +6,7 @@ import { useDemoState } from "@/lib/demo-state";
 import type { RoleName } from "@/types/rbac";
 
 export function RoleSwitcher() {
-  const { selectedRole, setSelectedRole } = useDemoState();
+  const { isRoleReady, selectedRole, setSelectedRole } = useDemoState();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -44,6 +44,10 @@ export function RoleSwitcher() {
   }, [isOpen, selectedIndex]);
 
   function chooseRole(role: RoleName) {
+    if (!isRoleReady) {
+      return;
+    }
+
     setSelectedRole(role);
     setIsOpen(false);
     triggerRef.current?.focus();
@@ -68,8 +72,13 @@ export function RoleSwitcher() {
         aria-expanded={isOpen}
         aria-controls="demo-role-switcher-listbox"
         aria-labelledby="demo-role-switcher-label demo-role-switcher-value"
+        disabled={!isRoleReady}
         onClick={() => setIsOpen((current) => !current)}
         onKeyDown={(event) => {
+          if (!isRoleReady) {
+            return;
+          }
+
           if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             setIsOpen(true);
@@ -83,7 +92,7 @@ export function RoleSwitcher() {
         className="role-trigger focus-ring"
       >
         <span id="demo-role-switcher-value" className="min-w-0 truncate">
-          {selectedRole}
+          {isRoleReady ? selectedRole : "Loading role"}
         </span>
         <svg aria-hidden="true" viewBox="0 0 20 20" className={["size-4 shrink-0 transition", isOpen ? "rotate-180" : ""].join(" ")} fill="none">
           <path d="m6 8 4 4 4-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
