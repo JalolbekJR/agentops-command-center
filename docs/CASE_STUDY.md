@@ -119,6 +119,21 @@ The current application includes:
 - Deterministic local data
 - Playwright route, console, access, responsive, theme, mode, and screenshot checks
 
+## Key product surfaces
+
+The app surface is organized around operational review:
+
+- Dashboard for mission-control status
+- Agents and built-in agents for ownership and capability review
+- Agent Builder for governed local draft creation
+- Runs for timeline evidence
+- Approvals for human decisions
+- Risks for security and policy findings
+- Evaluations for quality and release readiness
+- Browser QA for visible release evidence
+- Audit for accountability
+- Connectors, Plans, Setup, and Settings/RBAC for platform boundaries
+
 ## Future backend roadmap
 
 The production path should add:
@@ -144,3 +159,9 @@ The project demonstrates:
 - Security and governance planning before live integrations
 - QA discipline through typecheck, lint, build, Playwright, responsive screenshots, and static scans
 - A credible roadmap from frontend prototype to backend-enforced platform
+
+## Design decisions
+
+The interface uses a dark command-center shell, compact navigation, calm active states, and restrained status color. Simple mode supports stakeholder walkthroughs, while Professional mode exposes traces, policies, scores, and audit context.
+
+The mobile shell keeps the same product model while stacking content into a narrower workflow. The desktop sidebar can collapse into a rail so reviewers can compare the full navigation model with a focused workspace view.

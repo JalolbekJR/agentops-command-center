@@ -89,11 +89,11 @@ Completed outputs:
 - Mobile density improvements
 - Playwright route, console, access, responsive, theme, mode, and screenshot coverage
 
-## Current: Public documentation cleanup
+## Current: Public project documentation pack
 
-Phase 3C makes the repository read like public product documentation.
+Phase 3C makes the repository read like public product documentation and adds a complete review pack.
 
-Planned outputs:
+Completed and planned outputs:
 
 - Public-safe README
 - Public case study
@@ -101,7 +101,13 @@ Planned outputs:
 - Project outcomes summary
 - Updated roadmap and build-phase docs
 - Cleaned wording around prototype boundaries
-- Clear demo walkthrough and screenshot guide in a future documentation pass
+- Project summary
+- Demo walkthrough
+- Local demo boundary
+- Testing and QA guide
+- Backend roadmap
+- Screenshot guide
+- Public changelog
 
 Acceptance criteria:
 
@@ -111,17 +117,16 @@ Acceptance criteria:
 - Backend enforcement remains scoped to the roadmap
 - Technical reviewers can understand what exists now and what comes later
 
-## Next: Demo walkthrough and QA documentation
+## Next: Workflow simulation planning
 
-The next documentation phase should make the product easier to review.
+The next product phase should plan deterministic workflow simulation without external calls.
 
 Recommended outputs:
 
-- `docs/DEMO_WALKTHROUGH.md`
-- `docs/TESTING_AND_QA.md`
-- `docs/LOCAL_DEMO_BOUNDARY.md`
-- `docs/SCREENSHOT_GUIDE.md`
-- `CHANGELOG.md`
+- run state transition plan
+- approval pause/resume rules
+- release gate derivation rules
+- unit test plan for workflow logic
 
 ## Future: Workflow simulation
 
@@ -233,7 +238,7 @@ Acceptance criteria:
 - Letting UI polish hide weak domain modeling
 - Claiming production readiness before backend enforcement exists
 - Skipping accessibility and browser QA
-- Letting private planning notes leak into public product docs
+- Letting internal preparation material appear in public product docs
 
 ## Roadmap success definition
 
