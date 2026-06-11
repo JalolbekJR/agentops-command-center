@@ -98,6 +98,7 @@ Deeper technical references:
 - [Architecture](docs/ARCHITECTURE.md)
 - [Backend Implementation Plan](docs/BACKEND_IMPLEMENTATION_PLAN.md)
 - [Database Foundation](docs/DATABASE_FOUNDATION.md)
+- [Database Runtime Readiness](docs/DATABASE_RUNTIME_READINESS.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
 - [API Contracts](docs/API_CONTRACTS.md)
 - [Security Model](docs/SECURITY_MODEL.md)
