@@ -164,6 +164,46 @@ None found in this audit pass.
 - Responsive copy truncation: Mobile hero descriptions truncate cleanly, but key product meaning should remain intact after copy polish.
 - Screenshot scope: The current deterministic matrix covers 8 priority pages. Runs, Evaluations, Risks, and Audit may deserve responsive screenshots after their story polish.
 
+## Phase 3B.3 polish follow-up
+
+### What changed
+
+- Dashboard first viewport now centers on a mission-control panel, attention queue, evidence chain, and recommended operator action.
+- Agent Builder now reads more like a governed creation studio with template, connection, capability, target, approval, preview, evaluation, and audit steps.
+- Connectors now include a 10-second decision guide covering built-in agents, Native Protocol, webhook/SDK paths, MCP/tool connectors, Private Worker, and trace import.
+- Setup now presents a three-step guided onboarding lane for owner defaults, workspace-safe targets, and Website QA connection.
+- Built-in Agents now frames modules as plan-aware product packages with featured Website QA and roadmap modules.
+- Runs, Approvals, Evaluations, Risks, and Audit now have first-viewport command panels explaining their governance purpose.
+- Agents gained a compact registry summary and stronger mobile scanning.
+- Mobile shell density improved and the back-to-top control is hidden on very small screens.
+- Responsive screenshot coverage expanded from 24 images to 39 images across 13 routes and 3 viewports.
+
+### Audit risks addressed
+
+- Dashboard first viewport story is stronger and now explains what AgentOps controls.
+- Agent Builder first impression is closer to a premium studio while staying deterministic and local.
+- Connector comparison clarity improved with explicit decision criteria.
+- Setup flow now feels more like guided onboarding than documentation.
+- Built-in agent marketplace categories now feel intentional instead of sparse.
+- Governance routes now connect runs, approvals, evaluations, risks, and audit records to release readiness.
+- A mobile `/runs` horizontal overflow discovered by the expanded Playwright matrix was fixed.
+
+### What remains
+
+- Visual density is still high on mobile for Connector Center and Agent Builder; this is usable but not final investor polish.
+- The demo remains frontend-only with deterministic local data and no production authorization.
+- Route-level interactions are intentionally limited; the next phase can add richer local-state flows only if they stay honest about scope.
+- The design is safer for human review, but it should still receive a human visual pass before screenshots are used in a portfolio case study.
+
+### Tests after polish
+
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run build`: passed.
+- `npm run e2e`: passed with 62 tests.
+- Static scans for disallowed runtime patterns, native dropdown markup, environment files, and real-looking secrets: clean.
+- `git diff --check`: passed.
+
 ## Safe to start Phase 3B.3 polish
 
 Yes, it is safe to start Phase 3B.3 polish from a test and audit infrastructure perspective.

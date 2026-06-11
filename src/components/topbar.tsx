@@ -9,8 +9,8 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const { isRoleReady, selectedRole } = useDemoState();
 
   return (
-    <header className="topbar-shell z-30 shrink-0 px-4 py-2.5 sm:px-6 lg:px-8 xl:px-10">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+    <header className="topbar-shell z-30 shrink-0 px-4 py-2 sm:px-6 sm:py-2.5 lg:px-8 xl:px-10">
+      <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
@@ -27,10 +27,10 @@ export function Topbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
               <h1 className="truncate text-base font-semibold text-slate-50 sm:text-lg">AgentOps Command Center</h1>
               <EnvironmentBadge label={activeProject.environment} />
             </div>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-slate-500">
               <span className="hidden sm:inline">Workspace: Portfolio Demo</span>
-              <span className="sm:hidden">Role: </span>
-              <span className="font-semibold text-slate-300 sm:hidden">{isRoleReady ? selectedRole : "Loading"}</span>
+              <span className="sm:hidden">Local demo</span>
+              <span className="sr-only sm:hidden">. Current role: {isRoleReady ? selectedRole : "Loading"}</span>
             </p>
           </div>
         </div>

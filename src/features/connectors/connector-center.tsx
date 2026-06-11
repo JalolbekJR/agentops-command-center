@@ -24,6 +24,45 @@ const filters: Array<{ id: ConnectorFilter; label: string }> = [
   { id: "future", label: "Future" }
 ];
 
+const connectorDecisionGuide = [
+  {
+    question: "Fastest setup",
+    answer: "Built-in AgentOps agents",
+    detail: "Use Website QA first to create visible local evidence.",
+    tone: "success" as const
+  },
+  {
+    question: "Best custom format",
+    answer: "Native Protocol",
+    detail: "Structured events map cleanly into runs, risks, evaluations, costs, and audit.",
+    tone: "success" as const
+  },
+  {
+    question: "Safest private path",
+    answer: "Private Worker connector",
+    detail: "Enterprise teams keep sensitive execution and secrets inside their boundary later.",
+    tone: "warning" as const
+  },
+  {
+    question: "Existing external agents",
+    answer: "BYO Webhook or SDK",
+    detail: "Future signed callbacks or typed client helpers can feed the control plane.",
+    tone: "info" as const
+  },
+  {
+    question: "Internal tools",
+    answer: "MCP/tool connector",
+    detail: "Tool output stays data; permission and approval gates decide follow-up action.",
+    tone: "warning" as const
+  },
+  {
+    question: "Old run history",
+    answer: "Trace/import connector",
+    detail: "Backfill governance views from existing logs after redaction.",
+    tone: "neutral" as const
+  }
+];
+
 export function ConnectorCenter() {
   const { selectedRole } = useDemoState();
   const access = getRouteAccess(selectedRole, "/connectors");
@@ -58,8 +97,48 @@ export function ConnectorCenter() {
         action={<PermissionBadge level={access.level} />}
       />
 
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="min-w-0">
+            <p className="meta-label">10-second decision guide</p>
+            <h2 className="mt-2 text-xl font-semibold text-white sm:text-2xl">Pick the connector by evidence, privacy, and integration maturity.</h2>
+            <p className="muted-copy mt-3 text-sm">
+              Native Protocol is the recommended structured path because it preserves run events, tool calls, risks, approvals, evaluations, costs, and audit records in one contract.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="detail-tile">
+                <p className="meta-label">Current plan</p>
+                <p className="mt-1 text-sm font-semibold text-white">{currentPlan.name}</p>
+              </div>
+              <div className="detail-tile">
+                <p className="meta-label">Role control</p>
+                <p className="mt-1 text-sm font-semibold text-white">{access.level.replaceAll("_", " ")}</p>
+              </div>
+              <div className="detail-tile">
+                <p className="meta-label">Best default</p>
+                <p className="mt-1 text-sm font-semibold text-white">Native Protocol</p>
+              </div>
+            </div>
+          </div>
+          <div className="decision-matrix">
+            {connectorDecisionGuide.map((item) => (
+              <article key={item.question} className={["decision-tile", item.answer === "Native Protocol" ? "decision-tile-featured" : ""].join(" ")}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="meta-label">{item.question}</p>
+                    <p className="mt-1 text-sm font-semibold text-white">{item.answer}</p>
+                  </div>
+                  <StatusBadge label="Fit" tone={item.tone} />
+                </div>
+                <p className="muted-copy mt-2 text-sm">{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <article className="data-card">
+        <article className="data-card data-card-strong">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-white">Recommended connection path</p>
@@ -83,7 +162,7 @@ export function ConnectorCenter() {
           </div>
         </article>
 
-        <article className="data-card">
+        <article className="data-card data-card-strong">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-white">Native Protocol event preview</p>
@@ -164,7 +243,7 @@ export function ConnectorCenter() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <ActionButton disabled={connector.status === "future"}>View setup</ActionButton>
+                  <ActionButton disabled={connector.status === "future"}>View decision notes</ActionButton>
                   <ActionButton disabled={!roleCanUse || connector.status === "future"} variant={roleCanUse ? "primary" : "secondary"}>
                     {disabledReason}
                   </ActionButton>

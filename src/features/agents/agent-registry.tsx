@@ -9,6 +9,9 @@ import { riskTone } from "@/lib/status";
 
 export function AgentRegistry() {
   const usersById = new Map(mockUsers.map((user) => [user.id, user]));
+  const activeAgents = mockAgents.filter((agent) => agent.status === "active").length;
+  const approvalGatedCapabilities = mockAgents.flatMap((agent) => agent.capabilities).filter((capability) => capability.requiresApproval).length;
+  const averageSuccessRate = mockAgents.reduce((sum, agent) => sum + agent.successRate, 0) / mockAgents.length;
 
   return (
     <div className="space-y-6">
@@ -17,9 +20,33 @@ export function AgentRegistry() {
         title="Agent inventory with ownership and tool boundaries."
         description="Owners, capabilities, approval gates, health, and cost are visible before an agent joins a workflow."
       />
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-3 md:grid-cols-4">
+          <div className="detail-tile">
+            <p className="meta-label">Active agents</p>
+            <p className="mt-1 text-2xl font-semibold text-white">{activeAgents}</p>
+            <p className="subtle-copy mt-1 text-xs">Available to workflows</p>
+          </div>
+          <div className="detail-tile">
+            <p className="meta-label">Approval-gated tools</p>
+            <p className="mt-1 text-2xl font-semibold text-white">{approvalGatedCapabilities}</p>
+            <p className="subtle-copy mt-1 text-xs">Human review required</p>
+          </div>
+          <div className="detail-tile">
+            <p className="meta-label">Average health</p>
+            <p className="mt-1 text-2xl font-semibold text-white">{formatPercent(averageSuccessRate)}</p>
+            <p className="subtle-copy mt-1 text-xs">Deterministic demo success</p>
+          </div>
+          <div className="detail-tile">
+            <p className="meta-label">Boundary model</p>
+            <p className="mt-1 text-sm font-semibold text-white">Owner + capability + approval</p>
+            <p className="subtle-copy mt-1 text-xs">Before workflow use</p>
+          </div>
+        </div>
+      </section>
       <SectionCard
         title="Agents"
-        description="Operational inventory for the local workspace."
+        description="Operational inventory for the local workspace. Desktop uses a dense table; mobile converts agents into scannable cards."
       >
         <div className="data-table-shell hidden lg:block">
           <div className="premium-scroll overflow-x-auto">
@@ -81,9 +108,12 @@ export function AgentRegistry() {
 
             return (
               <article key={agent.id} className="data-card">
-                <div className="flex flex-wrap items-center gap-2">
-                  <StatusBadge label={agent.status} tone={riskTone(agent.riskLevel) === "danger" ? "warning" : "success"} />
-                  <RiskBadge riskLevel={agent.riskLevel} />
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <StatusBadge label={agent.status} tone={riskTone(agent.riskLevel) === "danger" ? "warning" : "success"} />
+                    <RiskBadge riskLevel={agent.riskLevel} />
+                  </div>
+                  <span className="mono-token text-xs">{formatCents(agent.averageCostCents)} avg</span>
                 </div>
                 <h3 className="mt-3 text-base font-semibold text-white">{agent.name}</h3>
                 <p className="muted-copy mt-2 text-sm">{agent.description}</p>

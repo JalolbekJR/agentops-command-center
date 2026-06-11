@@ -27,6 +27,35 @@ const builderSteps = [
   { id: "test", label: "Safe test" }
 ] as const;
 
+const connectionOptions = [
+  {
+    label: "Built-in AgentOps Agent",
+    fit: "Fastest safe demo",
+    detail: "Recommended for Website QA evidence and local release-readiness proof.",
+    tone: "success" as const
+  },
+  {
+    label: "Native Protocol",
+    fit: "Best structured path",
+    detail: "Custom agents emit run, tool, risk, evaluation, cost, and audit events.",
+    tone: "success" as const
+  },
+  {
+    label: "Private Worker",
+    fit: "Enterprise private",
+    detail: "Company-controlled execution for sensitive networks and secrets later.",
+    tone: "warning" as const
+  },
+  {
+    label: "Webhook / SDK / MCP / Trace Import",
+    fit: "Migration paths",
+    detail: "Valid future options when external systems need to join the control plane.",
+    tone: "neutral" as const
+  }
+];
+
+const previewArtifacts = ["Route smoke evidence", "Console/network notes", "Risk finding", "Approval checkpoint", "Evaluation scorecard", "Audit event"];
+
 const templateStudioCopy: Record<
   string,
   {
@@ -135,13 +164,37 @@ export function AgentBuilderWorkbench() {
         action={<PermissionBadge level={access.level} />}
       />
 
-      <div className="notice-card notice-card-neutral flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-slate-100">Local creation studio</p>
-          <p className="muted-copy mt-1 text-sm">Drafts only. No browser runs, external connectors, secrets, or persistence.</p>
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.48fr)]">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge label="Website QA recommended" tone="success" />
+              <StatusBadge label={canEdit ? "Builder enabled" : "Read-only role"} tone={canEdit ? "success" : "info"} />
+              <StatusBadge label="Local draft only" tone="neutral" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Choose a template, configure safe execution, preview the workflow, then prepare owner review.</h2>
+            <p className="muted-copy mt-3 max-w-3xl text-sm">
+              Nothing runs live in this phase. The studio models how a future backend will enforce targets, approval gates, usage limits, and audit output.
+            </p>
+            <div className="mt-5 evidence-strip">
+              {["Template", "Connection", "Capabilities", "Targets", "Approvals", "Preview", "Evaluation", "Audit"].map((label, index) => (
+                <div key={label} className="evidence-node">
+                  <p className="evidence-node-title">{label}</p>
+                  <p className="evidence-node-detail">{index < 6 ? "Configured locally" : "Preview only"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Draft readiness</p>
+            <p className="mt-2 text-lg font-semibold text-white">{draftCreated ? "Ready for owner review" : "Template selected, draft not created"}</p>
+            <p className="muted-copy mt-2 text-sm">Owner/Admin reviews monetization, connector policy, and governance before any future live execution path.</p>
+            <ActionButton disabled={!templateUsable} onClick={createDraft} variant={templateUsable ? "primary" : "secondary"} className="mt-4 w-full">
+              {!templatePlanAvailable ? "Upgrade required" : templateUsable ? "Create local draft" : "Role locked"}
+            </ActionButton>
+          </div>
         </div>
-        <StatusBadge label={canEdit ? "Builder enabled" : "Read-only role"} tone={canEdit ? "success" : "info"} />
-      </div>
+      </section>
 
       <section className="section-card py-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -216,6 +269,23 @@ export function AgentBuilderWorkbench() {
                   </article>
                 );
               })}
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Choose the connection method" description="Native Protocol is the preferred structured format; built-in agents are the fastest local demo path.">
+            <div className="decision-matrix">
+              {connectionOptions.map((option) => (
+                <article key={option.label} className={["decision-tile", option.label === selectedCopy.connection ? "decision-tile-featured" : ""].join(" ")}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white">{option.label}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{option.fit}</p>
+                    </div>
+                    <StatusBadge label={option.label === selectedCopy.connection ? "Selected" : "Option"} tone={option.tone} />
+                  </div>
+                  <p className="muted-copy mt-3 text-sm">{option.detail}</p>
+                </article>
+              ))}
             </div>
           </SectionCard>
 
@@ -322,6 +392,18 @@ export function AgentBuilderWorkbench() {
                 {nativeProtocolMappings.slice(0, 3).map((mapping) => (
                   <div key={mapping.eventCategory} className="mono-token rounded-md bg-white/[0.035] px-3 py-2 text-xs">
                     {mapping.eventCategory}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="data-card-muted p-4">
+              <p className="meta-label">Evidence artifacts</p>
+              <div className="mt-3 grid gap-2">
+                {previewArtifacts.map((artifact) => (
+                  <div key={artifact} className="flex items-center justify-between gap-3 rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-2">
+                    <span className="text-sm font-semibold text-slate-200">{artifact}</span>
+                    <StatusBadge label="Preview" tone="info" />
                   </div>
                 ))}
               </div>

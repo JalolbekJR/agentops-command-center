@@ -12,7 +12,12 @@ const responsiveRoutes = [
   "/connectors",
   "/setup",
   "/plans",
-  "/settings"
+  "/settings",
+  "/runs",
+  "/approvals",
+  "/evaluations",
+  "/risks",
+  "/audit"
 ] as const;
 
 const viewports = [
