@@ -1,0 +1,21 @@
+services:
+  agentops-postgres:
+    image: postgres:16-alpine
+    container_name: agentops-command-center-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: agentops_command_center
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - agentops_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d agentops_command_center"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  agentops_postgres_data:
