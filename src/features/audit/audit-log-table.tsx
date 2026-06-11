@@ -1,20 +1,43 @@
 import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
+import { StatusBadge } from "@/components/status-badge";
 import { mockAuditLogs } from "@/data/mock-audit-logs";
 import { mockUsers } from "@/data/mock-users";
 import { formatDateTime } from "@/lib/format";
 
 export function AuditLogTable() {
   const usersById = new Map(mockUsers.map((user) => [user.id, user]));
+  const latestAudit = mockAuditLogs[0];
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Audit"
-        title="Trace sensitive decisions with actor context."
-        description="Approvals, risks, workflow changes, and review events stay readable and correlated."
+        title="Decision ledger for governed actions."
+        description="Review who changed what, why it happened, and which run or policy it belongs to."
       />
-      <SectionCard title="Audit log" description="Recent governance events.">
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge label={`${mockAuditLogs.length} records`} tone="success" />
+              <StatusBadge label="Actor/action/reason" tone="info" />
+              <StatusBadge label="Export ready" tone="neutral" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Every governed decision keeps actor, reason, target, and correlation context.</h2>
+            <p className="muted-copy mt-3 text-sm">
+              Approvals, risks, workflow changes, and owner-controlled actions stay ordered for review.
+            </p>
+          </div>
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Latest record</p>
+            <p className="mt-2 text-sm font-semibold text-white">{latestAudit.action}</p>
+            <p className="muted-copy mt-2 text-sm">{latestAudit.reason}</p>
+            <p className="mono-token mt-3 break-words text-xs">{latestAudit.correlationId}</p>
+          </div>
+        </div>
+      </section>
+      <SectionCard title="Decision ledger" description="Recent governance events ordered for review.">
         <div className="data-table-shell hidden lg:block">
           <div className="premium-scroll overflow-x-auto">
             <table className="data-table">
@@ -43,9 +66,9 @@ export function AuditLogTable() {
             </table>
           </div>
         </div>
-        <div className="space-y-3 lg:hidden">
+        <div className="ledger-list space-y-3 lg:hidden">
           {mockAuditLogs.map((audit) => (
-            <article key={audit.id} className="data-card">
+            <article key={audit.id} className="ledger-event data-card">
               <p className="mono-token break-words text-xs">{audit.action}</p>
               <p className="mt-2 text-sm font-semibold text-white">{usersById.get(audit.actorUserId)?.name ?? "System"}</p>
               <p className="muted-copy mt-2 text-sm">{audit.reason}</p>

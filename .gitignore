@@ -8,6 +8,8 @@ build/
 .DS_Store
 *.log
 repomix-output.*
+playwright-report/
+test-results/
 
 tsconfig.tsbuildinfo
 

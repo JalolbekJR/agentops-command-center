@@ -26,20 +26,44 @@ const scoreLabels: Record<(typeof scoreKeys)[number], string> = {
 };
 
 export function EvaluationSummary() {
+  const averageScore = mockEvaluations.reduce((sum, evaluation) => sum + evaluation.overallScore, 0) / mockEvaluations.length;
+  const warningCount = mockEvaluations.filter((evaluation) => evaluation.status === "warning").length;
+  const minimumScore = Math.min(...mockEvaluations.map((evaluation) => evaluation.overallScore));
+
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Evaluation"
-        title="Score agent outcomes before release."
-        description="Quality, safety, reliability, cost, and policy scores feed release readiness without hiding weak signals."
+        title="Release confidence scorecards."
+        description="Compare correctness, safety, reliability, latency, cost, user impact, and policy before a workflow moves forward."
       />
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge label={`${formatPercent(averageScore, 1)} avg`} tone="success" />
+              <StatusBadge label={`${warningCount} warning`} tone={warningCount > 0 ? "warning" : "success"} />
+              <StatusBadge label="Release confidence" tone="info" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Evaluation turns agent output into release evidence.</h2>
+            <p className="muted-copy mt-3 text-sm">
+              Scorecards show quality, safety, reliability, cost, user impact, and policy compliance so product and QA reviewers can explain release confidence.
+            </p>
+          </div>
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Gate policy</p>
+            <p className="mt-2 text-lg font-semibold text-white">Minimum observed score: {formatPercent(minimumScore, 1)}</p>
+            <p className="muted-copy mt-2 text-sm">Warnings do not disappear; they remain visible beside the run and audit story.</p>
+          </div>
+        </div>
+      </section>
       <SectionCard
         title="Scorecards"
         description="Weighted results for recent workflow runs."
       >
-        <div className="grid gap-4 xl:grid-cols-3">
+        <div className="scorecard-grid grid gap-4 xl:grid-cols-3">
           {mockEvaluations.map((evaluation) => (
-            <article key={evaluation.id} className="data-card">
+            <article key={evaluation.id} className="evaluation-card data-card">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-white">{evaluation.workflowRunId}</p>

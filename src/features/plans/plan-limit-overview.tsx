@@ -38,15 +38,15 @@ export function PlanLimitOverview() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Plans and usage"
-        title="Plan packaging for a monetizable agent operations platform."
-        description="Free Demo proves value safely, Starter supports small teams, Pro unlocks custom agent operations, and Enterprise adds private workers and license control."
+        title="Commercial packaging without live billing."
+        description="Free Demo proves value safely, Starter supports small teams, Pro unlocks custom-agent operations, and Enterprise models private execution boundaries."
         action={<PermissionBadge level={access.level} />}
       />
 
       <div className="notice-card notice-card-neutral flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-100">Payment boundary</p>
-          <p className="muted-copy mt-1 text-sm">Pricing and limits are product packaging only. No checkout, billing portal, webhooks, or Stripe code exists.</p>
+          <p className="muted-copy mt-1 text-sm">Billing is mocked in this portfolio demo; plan limits model future commercial packaging.</p>
         </div>
         <StatusBadge label={canManagePlans ? "owner can manage" : "read-only"} tone={canManagePlans ? "success" : "info"} />
       </div>

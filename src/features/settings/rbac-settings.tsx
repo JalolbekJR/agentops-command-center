@@ -3,6 +3,7 @@
 import { PageHeader } from "@/components/page-header";
 import { SectionCard } from "@/components/section-card";
 import { StatusBadge } from "@/components/status-badge";
+import { ViewPreferenceControls } from "@/components/view-preference-controls";
 import { useDemoState } from "@/lib/demo-state";
 import { getRoleAccessSummary } from "@/lib/role-access";
 import { roleDefinitions } from "@/lib/rbac";
@@ -11,7 +12,7 @@ import type { RoleName } from "@/types/rbac";
 const roleBoundaries: Record<RoleName, { can: string; cannot: string }> = {
   "Founder/Admin": {
     can: "Inspect every local product area, owner setting, plan, approval, risk, and audit surface.",
-    cannot: "Bypass the demo boundary: no live agents, external services, database writes, or secrets exist in this client model."
+    cannot: "Use live services from this portfolio workspace."
   },
   "AI Engineer": {
     can: "Build workspace-level drafts, configure connectors, inspect runs, and use the Agent Builder.",
@@ -35,18 +36,18 @@ const roleBoundaries: Record<RoleName, { can: string; cannot: string }> = {
   }
 };
 
-const demoBoundaryItems = ["No external requests", "No auth provider", "No database", "No live agents", "No secrets"];
+const demoBoundaryItems = ["No external requests", "No auth provider", "No database writes", "No live agents"];
 
 export function RbacSettings() {
-  const { selectedRole } = useDemoState();
+  const { selectedRole, themeMode, uiMode } = useDemoState();
   const selectedBoundary = roleBoundaries[selectedRole];
 
   return (
     <div className="space-y-6">
       <PageHeader
         eyebrow="Settings"
-        title="Demo boundary and RBAC model."
-        description="A concise view of local role behavior, demo limits, and the backend policy shape this portfolio app is ready to enforce later."
+        title="Role, display, and environment controls."
+        description="Tune the role view, experience mode, theme, and local workspace boundary."
       />
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)]">
@@ -71,7 +72,25 @@ export function RbacSettings() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Demo boundary" description="These constraints are intentional for a safe local portfolio showcase.">
+        <SectionCard title="Display preferences" description="Choose a simpler walkthrough or the complete command-center view.">
+          <div className="space-y-4">
+            <ViewPreferenceControls className="flex-wrap" />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="data-card-muted p-4">
+                <p className="meta-label">Mode</p>
+                <p className="mt-1 text-sm font-semibold text-white">{uiMode === "simple" ? "Simple summary" : "Professional detail"}</p>
+                <p className="muted-copy mt-2 text-sm">{uiMode === "simple" ? "Shows current state and next action." : "Shows traces, policies, scores, and audit context."}</p>
+              </div>
+              <div className="data-card-muted p-4">
+                <p className="meta-label">Theme</p>
+                <p className="mt-1 text-sm font-semibold text-white">{themeMode === "dark" ? "Premium dark" : "Lavender light"}</p>
+                <p className="muted-copy mt-2 text-sm">{themeMode === "dark" ? "Premium dark command center." : "Lavender light workspace."}</p>
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Environment boundary" description="The portfolio workspace is deterministic and local-only.">
           <div className="grid gap-2">
             {demoBoundaryItems.map((item) => (
               <div key={item} className="flex items-center justify-between gap-3 rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-2">
@@ -113,9 +132,9 @@ export function RbacSettings() {
       </SectionCard>
 
       <div className="notice-card notice-card-neutral">
-        <p className="text-sm font-semibold text-slate-100">Backend readiness note</p>
+        <p className="text-sm font-semibold text-slate-100">Policy readiness note</p>
         <p className="muted-copy mt-2 text-sm">
-          This phase models route, navigation, feature, and action permissions in client-side TypeScript only. A production backend must enforce the same policy before returning data or accepting actions.
+          This phase models route, navigation, feature, and action permissions in client-side TypeScript. A future service layer must enforce the same policy before returning data or accepting actions.
         </p>
       </div>
     </div>

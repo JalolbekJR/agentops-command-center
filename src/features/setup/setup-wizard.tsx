@@ -13,6 +13,11 @@ import { getSetupHealthTone, getSetupStepTone, summarizeSetupHealth } from "@/li
 
 const selectedMode = mockDeploymentModes.find((mode) => mode.mode === "hosted_saas") ?? mockDeploymentModes[0];
 const nextStep = mockSetupSteps.find((step) => step.status === "needs_input") ?? mockSetupSteps[0];
+const quickSetupFlow = [
+  ["1", "Choose hosted SaaS", "Fastest local-demo baseline with owner-controlled defaults."],
+  ["2", "Verify safe targets", "Workspace admins connect only allowlisted local/demo targets."],
+  ["3", "Connect Website QA", "Teams produce visible evidence before backend execution exists."]
+] as const;
 
 export function SetupWizard() {
   const { selectedRole } = useDemoState();
@@ -23,20 +28,43 @@ export function SetupWizard() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Setup"
-        title="Guided setup for governed agent operations."
-        description="Choose the deployment path, separate owner controls from workspace setup, and move through the checklist without exposing platform-global settings."
+        title="Three steps to a safe workspace."
+        description="Choose the deployment path, verify safe targets, and connect the first evidence-producing agent."
         action={<PermissionBadge level={access.level} />}
       />
 
-      <div className="notice-card notice-card-neutral flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold text-slate-100">Recommended path: {selectedMode.label}</p>
-          <p className="muted-copy mt-1 text-sm">Best for small teams that want fast setup, safe defaults, and no private worker complexity.</p>
+      <section className="command-panel p-4 sm:p-5">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge label="Owner-controlled setup" tone="warning" />
+              <StatusBadge label="Workspace-safe configuration" tone="success" />
+              <StatusBadge label="Local demo baseline" tone="neutral" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Start with safe defaults, then connect agents through workspace controls.</h2>
+            <p className="muted-copy mt-3 max-w-3xl text-sm">
+              Owner settings and workspace setup stay separate, so teams can prepare targets and connectors without touching platform-global policy.
+            </p>
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              {quickSetupFlow.map(([step, title, detail]) => (
+                <div key={step} className="detail-tile">
+                  <div className="timeline-index size-7 text-[0.7rem]">{step}</div>
+                  <p className="mt-3 text-sm font-semibold text-white">{title}</p>
+                  <p className="muted-copy mt-1 text-sm">{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Recommended path</p>
+            <p className="mt-2 text-lg font-semibold text-white">{selectedMode.label}</p>
+            <p className="muted-copy mt-2 text-sm">Best for small teams that want fast setup, safe defaults, and no private worker complexity.</p>
+            <ActionButton disabled={!canEdit} variant="primary" className="mt-4 w-full">
+              Continue setup
+            </ActionButton>
+          </div>
         </div>
-        <ActionButton disabled={!canEdit} variant="primary">
-          Continue setup
-        </ActionButton>
-      </div>
+      </section>
 
       <section className="grid gap-4 xl:grid-cols-3">
         {mockDeploymentModes.map((mode) => {

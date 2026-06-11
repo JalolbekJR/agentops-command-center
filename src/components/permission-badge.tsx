@@ -10,6 +10,18 @@ const toneByAccess: Record<AccessLevel, Tone> = {
   locked: "warning"
 };
 
+const labelByAccess: Record<AccessLevel, string> = {
+  full: "Owner access",
+  configure: "Workspace access",
+  read: "View access",
+  redacted: "Redacted view",
+  locked: "Role locked"
+};
+
+export function getAccessLevelLabel(level: AccessLevel) {
+  return labelByAccess[level];
+}
+
 export function PermissionBadge({ level }: { level: AccessLevel }) {
-  return <StatusBadge label={level === "configure" ? "workspace-level" : level} tone={toneByAccess[level]} />;
+  return <StatusBadge label={getAccessLevelLabel(level)} tone={toneByAccess[level]} />;
 }

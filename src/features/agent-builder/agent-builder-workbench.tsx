@@ -27,6 +27,48 @@ const builderSteps = [
   { id: "test", label: "Safe test" }
 ] as const;
 
+const studioFlow = ["Template Library", "Configure", "Safety Gates", "Preview", "Readiness"] as const;
+
+const readinessSignals = [
+  ["Template", "Website QA selected"],
+  ["Connection", "Built-in connector"],
+  ["Capabilities", "Browser evidence"],
+  ["Targets", "Allowlisted demo targets"],
+  ["Approvals", "Owner gate"],
+  ["Preview", "Draft preview"],
+  ["Evaluation", "Scorecard attached"],
+  ["Audit", "Ledger attached"]
+] as const;
+
+const connectionOptions = [
+  {
+    label: "Built-in AgentOps Agent",
+    fit: "Fastest safe demo",
+    detail: "Recommended for Website QA evidence and local release-readiness proof.",
+    tone: "success" as const
+  },
+  {
+    label: "Native Protocol",
+    fit: "Best structured path",
+    detail: "Custom agents emit run, tool, risk, evaluation, cost, and audit events.",
+    tone: "success" as const
+  },
+  {
+    label: "Private Worker",
+    fit: "Enterprise private",
+    detail: "Company-controlled execution for sensitive networks and secrets later.",
+    tone: "warning" as const
+  },
+  {
+    label: "Webhook / SDK / MCP / Trace Import",
+    fit: "Migration paths",
+    detail: "Valid future options when external systems need to join the control plane.",
+    tone: "neutral" as const
+  }
+];
+
+const previewArtifacts = ["Route smoke evidence", "Console/network notes", "Risk finding", "Approval checkpoint", "Evaluation scorecard", "Audit event"];
+
 const templateStudioCopy: Record<
   string,
   {
@@ -89,7 +131,7 @@ function getTemplateActionState({ available, canUse }: { available: boolean; can
 }
 
 export function AgentBuilderWorkbench() {
-  const { selectedRole } = useDemoState();
+  const { selectedRole, uiMode } = useDemoState();
   const access = getRouteAccess(selectedRole, "/agent-builder");
   const canEdit = canUseAgentBuilder(selectedRole);
   const configSectionRef = useRef<HTMLElement>(null);
@@ -130,24 +172,76 @@ export function AgentBuilderWorkbench() {
     <div className="space-y-5 sm:space-y-6">
       <PageHeader
         eyebrow="Agent Builder"
-        title="Build a governed agent draft."
-        description="Choose a safe template, review the execution boundary, and prepare a local draft without running agents or calling external services."
+        title="Agent Builder Studio."
+        description="Choose a module, set the connection, and prepare a safe draft."
         action={<PermissionBadge level={access.level} />}
       />
 
-      <div className="notice-card notice-card-neutral flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-slate-100">Local creation studio</p>
-          <p className="muted-copy mt-1 text-sm">Drafts only. No browser runs, external connectors, secrets, or persistence.</p>
-        </div>
-        <StatusBadge label={canEdit ? "Builder enabled" : "Read-only role"} tone={canEdit ? "success" : "info"} />
-      </div>
+      <section className="builder-studio command-panel p-4 sm:p-5">
+        <div className="grid gap-4 xl:grid-cols-[minmax(13rem,0.72fr)_minmax(0,1.2fr)_minmax(17rem,0.58fr)]">
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Selected module</p>
+            <h2 className="mt-2 text-lg font-semibold text-[var(--text-strong)]">{selectedTemplate.name}</h2>
+            <p className="muted-copy mt-2 text-sm">{selectedCopy.subtitle}</p>
+            <div className="mt-4 grid gap-2">
+              <div className="detail-tile">
+                <p className="meta-label">Safest next step</p>
+                <p className="mt-1 text-sm font-semibold text-white">Create local draft</p>
+              </div>
+              <div className="detail-tile">
+                <p className="meta-label">Approval reason</p>
+                <p className="mt-1 text-sm font-semibold text-white">Owner gate before execution</p>
+              </div>
+            </div>
+          </div>
 
-      <section className="section-card py-4">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge label="Website QA first" tone="success" />
+              <StatusBadge label={canEdit ? "Builder enabled" : "Read-only role"} tone={canEdit ? "success" : "info"} />
+              <StatusBadge label={selectedCopy.connection} tone="info" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">
+              {uiMode === "simple" ? "Start with Website QA and prepare the next safe step." : "Build the draft through governed studio stages."}
+            </h2>
+            <p className="muted-copy mt-3 max-w-3xl text-sm">
+              {uiMode === "simple"
+                ? "Review the recommended module, keep the built-in connector, then create a local draft for owner review."
+                : "The studio collects the selected module, connector policy, safety gates, evidence preview, and review readiness before execution exists."}
+            </p>
+            <div className="builder-flow mt-5" aria-label="Agent builder flow">
+              {studioFlow.map((step, index) => (
+                <div key={step} className={["builder-flow-step", index === 0 ? "builder-flow-step-active" : ""].join(" ")}>
+                  <span className="builder-flow-dot" aria-hidden="true" />
+                  <span>{step}</span>
+                </div>
+              ))}
+            </div>
+            <div className="professional-only mt-5 evidence-strip">
+              {readinessSignals.map(([label, detail]) => (
+                <div key={label} className="evidence-node">
+                  <p className="evidence-node-title">{label}</p>
+                  <p className="evidence-node-detail">{detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="data-card-muted p-4">
+            <p className="meta-label">Draft readiness</p>
+            <p className="mt-2 text-lg font-semibold text-[var(--text-strong)]">{draftCreated ? "Ready for owner review" : "Template selected, draft not created"}</p>
+            <p className="muted-copy mt-2 text-sm">Owner/Admin reviews plan, connector policy, and governance before execution.</p>
+            <ActionButton disabled={!templateUsable} onClick={createDraft} variant={templateUsable ? "primary" : "secondary"} className="mt-4 w-full">
+              {!templatePlanAvailable ? "Upgrade required" : templateUsable ? "Create local draft" : "Role locked"}
+            </ActionButton>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-card py-4 professional-only">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="meta-label">Progress</p>
-            <p className="mt-1 text-sm text-slate-400">A compact local flow for future backend-enforced agent creation.</p>
+            <p className="mt-1 text-sm text-slate-400">A compact path from selected module to reviewed draft.</p>
           </div>
           <StatusBadge label={draftCreated ? "Draft ready" : "Draft not created"} tone={draftCreated ? "success" : "neutral"} />
         </div>
@@ -168,7 +262,7 @@ export function AgentBuilderWorkbench() {
 
       <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_25rem]">
         <main className="min-w-0 space-y-5">
-          <SectionCard title="Choose a template" description="Website QA is the recommended first module because it produces visible, low-risk portfolio evidence.">
+          <SectionCard title="Template Library" description="Website QA is the recommended first module because it produces visible, low-risk browser evidence.">
             <div className="grid gap-4 lg:grid-cols-2">
               {mockAgentBuilderTemplates.map((template) => {
                 const templateCopy = getTemplateCopy(template.id);
@@ -183,15 +277,15 @@ export function AgentBuilderWorkbench() {
                   <article key={template.id} className={["data-card-muted flex min-h-[21rem] min-w-0 flex-col p-4", isSelected ? "border-white/[0.18] bg-white/[0.055]" : ""].join(" ")}>
                     <div className="flex min-w-0 items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-base font-semibold leading-6 text-white">{template.name}</p>
+                        <p className="text-base font-semibold leading-6 text-[var(--text-strong)]">{template.name}</p>
                         <p className="mt-1 text-sm font-medium text-slate-300">{templateCopy.subtitle}</p>
                       </div>
                       {isSelected ? <StatusBadge label="selected" tone="info" /> : null}
                     </div>
 
-                    <p className="muted-copy mt-4 text-sm leading-6">{templateCopy.body}</p>
+                  <p className="muted-copy mt-4 text-sm leading-6">{templateCopy.body}</p>
 
-                    <div className="mt-4 grid gap-2">
+                    <div className="professional-only mt-4 grid gap-2">
                       {[
                         ["Connection", templateCopy.connection],
                         ["Plan", templateCopy.plan],
@@ -219,8 +313,25 @@ export function AgentBuilderWorkbench() {
             </div>
           </SectionCard>
 
+          <SectionCard title="Connection Method" description="Native Protocol is the preferred structured format; built-in agents are the fastest safe demo path.">
+            <div className="decision-matrix">
+              {connectionOptions.map((option) => (
+                <article key={option.label} className={["decision-tile", option.label === selectedCopy.connection ? "decision-tile-featured" : ""].join(" ")}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white">{option.label}</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{option.fit}</p>
+                    </div>
+                    <StatusBadge label={option.label === selectedCopy.connection ? "Selected" : "Option"} tone={option.tone} />
+                  </div>
+                  <p className="muted-copy mt-3 text-sm">{option.detail}</p>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+
           <section ref={configSectionRef} tabIndex={-1} className="focus:outline-none">
-            <SectionCard title="Configure draft" description="Selected settings are local state only. Future backend phases must enforce the same policy server-side.">
+          <SectionCard title="Safety Gates & Draft Review" description="Review target boundaries, approval gates, usage limits, and evidence before creating the draft.">
               <div className="grid gap-4 xl:grid-cols-2">
                 <article className="data-card-muted p-4">
                   <p className="meta-label">Selected template</p>
@@ -328,6 +439,18 @@ export function AgentBuilderWorkbench() {
             </div>
 
             <div className="data-card-muted p-4">
+              <p className="meta-label">Evidence artifacts</p>
+              <div className="mt-3 grid gap-2">
+                {previewArtifacts.map((artifact) => (
+                  <div key={artifact} className="flex items-center justify-between gap-3 rounded-md border border-white/[0.06] bg-white/[0.03] px-3 py-2">
+                    <span className="text-sm font-semibold text-slate-200">{artifact}</span>
+                    <StatusBadge label="Preview" tone="info" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="data-card-muted p-4">
               <p className="meta-label">Approval and plan summary</p>
               <p className="muted-copy mt-2 text-sm">Gate: {mockAgentBuilderReview.approvalGates[0]}</p>
               <p className="muted-copy mt-1 text-sm">Limit: {mockAgentBuilderReview.usageLimitLabel}</p>
@@ -337,7 +460,7 @@ export function AgentBuilderWorkbench() {
             <div className="data-card-muted p-4">
               <p className="meta-label">Draft summary</p>
               <p className="mt-2 text-sm font-semibold text-white">{draftCreated ? `${selectedTemplate.name} draft prepared` : "No draft created yet"}</p>
-              <p className="muted-copy mt-2 text-sm">This state is local to the browser session and does not persist data.</p>
+              <p className="muted-copy mt-2 text-sm">Draft state stays in this browser for the portfolio workspace.</p>
             </div>
 
             <ActionButton disabled={!templateUsable} onClick={createDraft} variant={templateUsable ? "primary" : "secondary"} className="w-full">
