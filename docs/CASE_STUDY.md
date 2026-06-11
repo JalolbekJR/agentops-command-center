@@ -1,161 +1,146 @@
-# Case Study
+# Case study
 
-## Working Title
-
-Designing an AI Agent Operations Command Center from first principles
-
-## Project Story
-
-AgentOps Command Center is a flagship portfolio project about controlling AI automation instead of simply showcasing it. The project starts with documentation and architecture because the product is meant to demonstrate real engineering judgment: domain modeling, workflows, run states, approvals, evaluations, risk review, RBAC, audit logs, and QA strategy.
-
-The goal is to build a product that a reviewer can inspect as both a polished interface and a serious system design exercise.
-
-## Why I Built It
-
-AI agent demos often show a tool completing a task, but they rarely answer operational questions:
-
-- What was the agent allowed to do?
-- What did it do step by step?
-- Which tool calls were risky?
-- Who approved a sensitive decision?
-- How was the result evaluated?
-- What would block release?
-- How would a security reviewer audit it?
-
-I built this project direction to show that I can think beyond prompt output and design the control plane around AI automation.
+AgentOps Command Center is a deterministic frontend control-plane prototype for governing AI agent workflows. This case study explains the product problem, the architecture decisions, the current prototype boundary, and the roadmap to backend enforcement.
 
 ## Problem
 
-Teams adopting AI agents need confidence and governance. Agents may browse, call tools, generate code, summarize data, or propose actions. Without traceability and approval gates, useful automation can become difficult to debug, unsafe to operate, and hard to explain to stakeholders.
+AI agents can browse, call tools, summarize data, generate code, and propose operational actions. Teams need a way to understand what an agent was allowed to do, what it did, which actions were risky, who approved sensitive decisions, how the result was evaluated, and what evidence remains for audit.
 
-## Solution
+Without a control plane, AI automation becomes difficult to debug, govern, and explain to stakeholders.
 
-AgentOps Command Center models an enterprise AI operations platform with:
+## Product thesis
 
-- Agent registry.
-- Workflow definitions.
-- Run timelines.
-- Tool call history.
-- Human approval checkpoints.
-- Evaluation scores.
-- Risk findings.
-- Browser QA session records.
-- Cost analytics.
-- Audit logs.
-- RBAC and environment boundaries.
+AgentOps Command Center models AI automation as an operations and governance problem. The product connects agents, workflows, runs, risks, approvals, evaluations, browser QA evidence, cost records, and audit logs into one reviewable flow.
 
-The product starts as a deterministic demo so the interface, architecture, and portfolio story can be built without pretending to have production integrations.
+The prototype starts with deterministic local data so reviewers can inspect product behavior without external accounts, secrets, backend services, live AI calls, or production-side effects.
 
-## Product Decisions
+## Users and stakeholders
 
-### Start with documentation before code
+- **Founder/Admin**: reviews operating health, owner controls, setup, plans, and full local workspace visibility
+- **AI Engineer**: investigates agents, workflows, run timelines, tool calls, and builder configuration
+- **QA Reviewer**: checks release readiness, browser QA records, evaluations, and workflow evidence
+- **Security Reviewer**: reviews high-risk findings, sensitive tool outputs, approvals, and audit trails
+- **Product Manager**: reviews outcomes, packaging, plan limits, and release impact
+- **Viewer**: inspects read-only status without access to restricted configuration surfaces
 
-This avoids building a pretty dashboard with weak foundations. The first phase defines the domain, API contracts, security model, database schema, QA plan, and roadmap.
+## Core workflow
 
-### Use role-based exploration
+The central product chain is:
 
-The product has different meaning for each reviewer type:
+```text
+Agent -> Workflow -> Run -> Risk -> Approval -> Evaluation -> Audit
+```
 
-- AI Engineer sees debugging and workflow logic.
-- QA Reviewer sees release readiness.
-- Security Reviewer sees risk and audit.
-- Product Manager sees outcomes and decisions.
-- Founder/Admin sees operating health.
-- Viewer sees read-only status.
+The workflow begins with an agent and a workflow definition. A run emits traceable events, tool-call summaries, risk findings, and approval checkpoints. Evaluation results and unresolved risks can block release gates. Audit records preserve who changed what, why it changed, and which run or policy the decision belongs to.
 
-### Make approvals first-class
+## Architecture decisions
 
-Approval is not a modal added at the end. It is part of the workflow graph, run state machine, risk model, and audit trail.
+### Deterministic frontend prototype first
 
-### Use deterministic mock data first
-
-Random demo data makes testing and storytelling weaker. Deterministic run stories let the project support screenshots, replay, and predictable QA.
-
-## Architecture Decisions
+The current application uses local deterministic data and client state to prove the product language, navigation model, and governance flows before adding backend complexity.
 
 ### Modular monolith before services
 
-The future backend should begin as a modular monolith because the domain is still being shaped and a single codebase keeps RBAC, audit, API contracts, and workflow logic coherent.
+The future backend should start as a modular monolith. This keeps RBAC, audit logging, API contracts, workflow logic, and database transactions coherent while the domain model matures.
 
 ### Event timeline for runs
 
-Runs are represented as ordered events. This supports debugging, replay, audit, and UI timelines.
+Runs are represented as ordered events. This supports debugging, replay, audit review, failure analysis, and timeline-based user interfaces.
 
 ### PostgreSQL upgrade path
 
-The domain is relational: teams, users, projects, agents, workflows, runs, tool calls, approvals, risks, evaluations, and audit logs all need consistent relationships and indexes.
+The domain is relational. Teams, users, projects, agents, workflows, runs, tool calls, approvals, risks, evaluations, browser sessions, cost metrics, and audit logs need reliable joins, indexes, and historical traceability.
 
-### Queue/worker execution later
+### Queue and worker execution later
 
-Real AI/tool execution should move to workers with retries, policy checks, environment boundaries, and live event updates.
+Real AI and tool execution should happen in workers with retries, policy checks, environment boundaries, rate limits, secret references, and live event updates.
+
+## Deterministic prototype boundary
+
+The current product is not a production system. It does not include:
+
+- Backend authentication
+- Database persistence
+- Server-side RBAC enforcement
+- External APIs
+- Payments
+- Live agent execution
+- Real browser recordings
+- Deployed infrastructure
+- Production customers
+
+Backend enforcement is intentionally scoped to the roadmap. The local role switcher demonstrates product behavior, but a production system must enforce permissions server-side.
+
+## Safety and governance model
+
+The safety model uses:
+
+- Least-privilege roles
+- Route and navigation gating in the local prototype
+- Approval checkpoints for high-risk actions
+- Risk findings with severity and category
+- Evaluation scores tied to release gates
+- Secret references rather than raw secrets
+- Redacted or summarized sensitive tool output
+- Append-only audit-log direction for the future backend
+
+## RBAC and access model
+
+The role model separates product surfaces by responsibility:
+
+- Founder/Admin can access owner controls and all local workspace surfaces
+- AI Engineer can access Agent Builder and engineering surfaces, but not Owner Control
+- Viewer cannot access Agent Builder or Owner Control
+- Settings remains visible while owner-only settings are gated inside the product model
+
+The local product prevents restricted content from rendering for roles that cannot access it. Future backend routes must enforce the same permissions server-side.
 
 ## Tradeoffs
 
 | Tradeoff | Decision |
 | --- | --- |
-| Docs first vs app first | Docs first because the project must prove architecture and product thinking. |
-| Deterministic mock data vs real integrations | Mock first to avoid fake production claims and keep the demo safe. |
-| Modular monolith vs microservices | Modular monolith first; microservices only if scale/team boundaries justify it. |
-| Rich UI vs dense operations UI | Dense operations UI because target users need scanning, comparison, and review. |
-| Role switcher vs real auth early | Role switcher for portfolio demo; real auth later. |
+| Deterministic prototype vs live integrations | Use deterministic local behavior first to keep review, testing, and scope honest |
+| Role switcher vs production auth | Use a local role switcher for product walkthroughs and document the server-side enforcement requirement |
+| Modular monolith vs microservices | Start with a modular monolith until scale or team boundaries justify services |
+| Dense operations UI vs marketing layout | Use an operations layout because the target workflow needs scanning, comparison, and repeated review |
+| Mock billing model vs live payments | Model plans and limits without payment code until backend and billing scope are approved |
 
-## Constraints
+## Current implementation
 
-- Phase 1 is docs only.
-- No app scaffold yet.
-- No package installs.
-- No external accounts.
-- No secrets.
-- No production deployment.
-- No real AI or browser automation.
-- Honest portfolio/demo framing.
+The current application includes:
 
-## What I Learned Or Intend To Demonstrate
+- Premium responsive app shell
+- Role-aware navigation and route gates
+- Custom role switcher
+- Dark and light themes
+- Simple and Professional view modes
+- Dashboard overview
+- Agents, workflows, runs, approvals, evaluations, risks, audit, settings, setup, connectors, built-in agents, plans, Owner Control, and Agent Builder surfaces
+- Deterministic local data
+- Playwright route, console, access, responsive, theme, mode, and screenshot checks
 
-- How to model an AI agent workflow as a system, not a prompt chain.
-- How to connect approvals, risk findings, evaluations, and audit logs.
-- How to design role-specific product workflows.
-- How to define a future backend before writing app code.
-- How to create a QA strategy that includes browser, accessibility, security, and performance.
-- How to communicate tradeoffs clearly to technical and non-technical reviewers.
+## Future backend roadmap
 
-## What This Proves About Me
+The production path should add:
 
-This project is designed to prove:
+1. Authentication and workspace membership
+2. Server-side RBAC enforcement
+3. PostgreSQL persistence
+4. API validation and typed error contracts
+5. Append-only audit writer
+6. Queue and worker execution
+7. Connector token hashing and secret references
+8. Real agent/tool execution behind approval gates
+9. Evaluation and release-gate enforcement
+10. Observability, rate limits, data retention, and deployment controls
 
-- I understand system architecture and phased delivery.
-- I can translate product requirements into domain models and API contracts.
-- I can reason about AI safety, permissions, and human-in-the-loop workflows.
-- I can design for security reviewers, QA reviewers, engineers, founders, and product managers.
-- I can build a project that has credible backend, database, QA, and security thinking before the UI exists.
+## Engineering outcomes
 
-## Future Improvements
+The project demonstrates:
 
-- Implement the Next.js app shell.
-- Create typed domain models and seed data.
-- Build the dashboard, agent registry, runs, approvals, risk, evaluation, browser QA, and audit screens.
-- Add deterministic workflow simulation.
-- Add tests and browser QA.
-- Add screenshots and case-study visuals.
-- Plan backend/database upgrade with real RBAC.
-- Add real AI integration only behind explicit permission and safety boundaries.
-
-## Portfolio Presentation Structure
-
-1. One-sentence product explanation.
-2. Problem: AI agents need control, evaluation, and auditability.
-3. Product walkthrough by role.
-4. Architecture diagram and domain model.
-5. Run timeline and approval workflow.
-6. Security/RBAC model.
-7. QA and release gate strategy.
-8. Tradeoffs and phased roadmap.
-9. What the project proves technically.
-
-## Case Study Acceptance Criteria
-
-- The story is honest about what exists now.
-- The case study explains why the product matters.
-- Technical decisions connect to product goals.
-- Tradeoffs are specific, not generic.
-- The future roadmap is credible.
+- Product modeling for governed AI operations
+- Domain modeling across agents, workflows, runs, approvals, evaluations, risks, browser QA, cost, and audit
+- Frontend implementation with deterministic state and role-aware product behavior
+- Security and governance planning before live integrations
+- QA discipline through typecheck, lint, build, Playwright, responsive screenshots, and static scans
+- A credible roadmap from frontend prototype to backend-enforced platform

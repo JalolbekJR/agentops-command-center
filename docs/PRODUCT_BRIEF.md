@@ -48,7 +48,7 @@ AgentOps Command Center gives teams a single place to understand and control AI 
 1. **Trace every important decision**: every run, tool call, approval, risk finding, and role change must be inspectable.
 2. **Human control for risky automation**: high-impact actions should pause for review.
 3. **Design for reviewers, not only builders**: PM, QA, security, and founder roles need useful views.
-4. **Prefer deterministic demos over fake magic**: Phase 1 and early app phases use explicit mock data and repeatable simulations.
+4. **Prefer deterministic demos over vague magic**: Phase 1 and early app phases use explicit mock data and repeatable simulations.
 5. **Security is part of the model**: RBAC, audit logs, secret references, and environment boundaries are first-class concepts.
 6. **MVP first, upgrade path clear**: local demo now, backend and real AI integration later.
 7. **Be honest about scope**: the product can look premium without claiming production behavior that does not exist yet.

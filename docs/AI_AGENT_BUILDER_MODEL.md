@@ -21,7 +21,7 @@ No real AI generation, external calls, code generation, or agent execution exist
 
 Website QA Agent is the recommended first template:
 
-- Easy to prove visually.
+- Visible in review.
 - Safe on local/demo targets.
 - Maps to BrowserSession, RunEvent, EvaluationResult, RiskFinding, CostMetric, and AuditLog.
 - Valuable for a real demo later.

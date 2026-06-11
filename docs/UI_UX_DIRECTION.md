@@ -222,7 +222,7 @@ Mobile:
 - Specific.
 - Calm.
 - Honest about demo scope.
-- No fake production claims.
+- No misleading production claims.
 - No hype words without evidence.
 - Use reviewer-friendly language for risks and failures.
 
@@ -239,7 +239,7 @@ Avoid:
 - "Autonomous magic."
 - "Enterprise-grade" without supporting details.
 
-## Anti-AI-Slop Checklist
+## Design Quality Checklist
 
 - [ ] Every page has a clear user job.
 - [ ] Status colors mean the same thing everywhere.
@@ -249,7 +249,7 @@ Avoid:
 - [ ] Copy explains risk without fearmongering.
 - [ ] Layout supports scanning and repeated use.
 - [ ] No decorative cards inside cards.
-- [ ] No fake screenshots or claims.
+- [ ] No misleading screenshots or claims.
 - [ ] No random gradients, neon effects, or generic hero copy inside the app.
 
 ## UI Acceptance Criteria
