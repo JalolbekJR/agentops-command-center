@@ -1,6 +1,6 @@
 # Project outcomes
 
-This document summarizes the product, engineering, security, QA, and UX outcomes represented by AgentOps Command Center. It is public project documentation, not a private career-preparation note.
+This document summarizes the product, engineering, security, QA, and UX outcomes delivered by AgentOps Command Center.
 
 ## Product outcomes
 
