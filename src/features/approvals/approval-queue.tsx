@@ -13,7 +13,7 @@ import { formatDateTime } from "@/lib/format";
 import type { ApprovalRequest } from "@/types/domain";
 
 export function ApprovalQueue() {
-  const { selectedRole } = useDemoState();
+  const { selectedRole, uiMode } = useDemoState();
   const [approvals, setApprovals] = useState<ApprovalRequest[]>(mockApprovals);
   const pendingCount = approvals.filter((approval) => approval.status === "pending").length;
   const decidedCount = approvals.length - pendingCount;
@@ -40,8 +40,8 @@ export function ApprovalQueue() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Approval queue"
-        title="Human review for gated agent actions."
-        description="Decision cards show who can approve, why the action paused, and what evidence triggered review."
+        title="Decide what can continue."
+        description="Review the reason, evidence, impact, and assigned reviewer before approving or rejecting a gated action."
       />
       <section className="command-panel p-4 sm:p-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
@@ -51,9 +51,11 @@ export function ApprovalQueue() {
               <StatusBadge label={`${decidedCount} decided`} tone="info" />
               <StatusBadge label={`Role: ${selectedRole}`} tone="neutral" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">High-impact agent actions pause until the right human reviewer decides.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">High-impact actions pause until the right reviewer decides.</h2>
             <p className="muted-copy mt-3 text-sm">
-              Approvals connect policy reason, risk level, assigned role, decision comment, and audit trail. Local decisions update only this browser session.
+              {uiMode === "simple"
+                ? "Start with the pending Security Reviewer gate. The decision determines whether the release path stays blocked."
+                : "Approvals connect policy reason, risk level, assigned role, decision comment, and audit trail. Local decisions update only this browser session."}
             </p>
           </div>
           <div className="data-card-muted p-4">
@@ -67,12 +69,9 @@ export function ApprovalQueue() {
           </div>
         </div>
       </section>
-      <SectionCard
-        title="Pending and recent approvals"
-        description="Decisions update local UI state only."
-      >
-        <div className="space-y-4">
-          {approvals.map((approval) => {
+      <SectionCard title="Decision queue" description="Pending decisions stay first; decided items remain available for audit context.">
+        <div className="approval-queue-list space-y-4">
+          {(uiMode === "simple" ? approvals.filter((approval) => approval.status === "pending") : approvals).map((approval) => {
             const canDecide = approval.status === "pending" && canDecideApproval(selectedRole, approval.assignedRole);
 
             return (
@@ -89,7 +88,7 @@ export function ApprovalQueue() {
                       Assigned to {approval.assignedRole}. Requested {formatDateTime(approval.requestedAt)}.
                     </p>
                     <p className="data-card-muted mt-2 px-3 py-2 text-xs text-slate-400">
-                      Current role permission: {canDecide ? "Can decide this local demo approval." : "Read-only for this approval in the demo RBAC model."}
+                      Decision access: {canDecide ? "This role can decide the gate." : "This role can inspect but not decide this gate."}
                     </p>
                     {approval.decisionComment ? <p className="muted-copy mt-3 text-sm">{approval.decisionComment}</p> : null}
                   </div>

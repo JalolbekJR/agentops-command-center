@@ -160,7 +160,7 @@ export function getRouteAccess(role: RoleName, route: PlatformRoute): RouteAcces
     level,
     requiredRole: route === "/owner-control" ? "Founder/Admin" : "Role with workspace or reviewer access",
     reason: level === "locked" ? lockedReasons[route][role] ?? `${role} does not have access to ${label}.` : `${role} has ${level} access to ${label}.`,
-    recommendedAction: level === "locked" ? recommendedActions[route][role] ?? "Switch to Founder/Admin in the local role switcher to inspect the full demo." : "Continue in the current role view."
+    recommendedAction: level === "locked" ? recommendedActions[route][role] ?? "Switch to Founder/Admin in the role switcher to inspect the owner view." : "Continue in the current role view."
   };
 }
 

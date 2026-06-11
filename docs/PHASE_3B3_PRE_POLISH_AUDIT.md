@@ -209,3 +209,7 @@ None found in this audit pass.
 Yes, it is safe to start Phase 3B.3 polish from a test and audit infrastructure perspective.
 
 This does not mean the product is investor-ready. It means the current app has a passing route, console, role/access, and responsive smoke baseline that can catch regressions during polish.
+
+## Phase 3B.4 follow-up
+
+Phase 3B.4 was created as the final visual differentiation, mobile compression, and light/dark premium theme pass. See `docs/PHASE_3B4_ELITE_UX_POLISH.md` for the implementation summary, screenshot folder, verification results, and remaining visual risks.

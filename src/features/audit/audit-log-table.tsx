@@ -13,8 +13,8 @@ export function AuditLogTable() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Audit"
-        title="Trace sensitive decisions with actor context."
-        description="Approvals, risks, workflow changes, and review events stay readable and correlated."
+        title="Decision ledger for governed actions."
+        description="Review who changed what, why it happened, and which run or policy it belongs to."
       />
       <section className="command-panel p-4 sm:p-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
@@ -22,11 +22,11 @@ export function AuditLogTable() {
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge label={`${mockAuditLogs.length} records`} tone="success" />
               <StatusBadge label="Actor/action/reason" tone="info" />
-              <StatusBadge label="Export-ready story" tone="neutral" />
+              <StatusBadge label="Export ready" tone="neutral" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Audit records preserve who decided, what changed, and why it mattered.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Every governed decision keeps actor, reason, target, and correlation context.</h2>
             <p className="muted-copy mt-3 text-sm">
-              This local table models the future append-only trail for approvals, risks, workflow changes, and owner-controlled actions.
+              Approvals, risks, workflow changes, and owner-controlled actions stay ordered for review.
             </p>
           </div>
           <div className="data-card-muted p-4">
@@ -37,7 +37,7 @@ export function AuditLogTable() {
           </div>
         </div>
       </section>
-      <SectionCard title="Audit log" description="Recent governance events.">
+      <SectionCard title="Decision ledger" description="Recent governance events ordered for review.">
         <div className="data-table-shell hidden lg:block">
           <div className="premium-scroll overflow-x-auto">
             <table className="data-table">
@@ -66,9 +66,9 @@ export function AuditLogTable() {
             </table>
           </div>
         </div>
-        <div className="space-y-3 lg:hidden">
+        <div className="ledger-list space-y-3 lg:hidden">
           {mockAuditLogs.map((audit) => (
-            <article key={audit.id} className="data-card">
+            <article key={audit.id} className="ledger-event data-card">
               <p className="mono-token break-words text-xs">{audit.action}</p>
               <p className="mt-2 text-sm font-semibold text-white">{usersById.get(audit.actorUserId)?.name ?? "System"}</p>
               <p className="muted-copy mt-2 text-sm">{audit.reason}</p>

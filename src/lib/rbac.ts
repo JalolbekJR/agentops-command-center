@@ -3,7 +3,7 @@ import type { PermissionKey, RoleDefinition, RoleName } from "@/types/rbac";
 export const roleDefinitions: RoleDefinition[] = [
   {
     name: "Founder/Admin",
-    description: "Full demo access to projects, roles, workflows, approvals, risks, settings, and audit logs.",
+    description: "Complete demo access to projects, roles, workflows, approvals, risks, settings, and audit logs.",
     permissions: [
       "dashboard.read",
       "agent.read",
@@ -35,7 +35,7 @@ export const roleDefinitions: RoleDefinition[] = [
       "platform.plans.manage",
       "platform.ownerControl.manage"
     ],
-    demoNote: "Full local workspace visibility for portfolio review."
+    demoNote: "Complete local workspace visibility for portfolio review."
   },
   {
     name: "AI Engineer",

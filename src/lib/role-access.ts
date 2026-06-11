@@ -47,7 +47,7 @@ export {
 
 export function getRoleAccessSummary(role: RoleName) {
   if (role === "Founder/Admin") {
-    return "Platform owner view with full local demo access.";
+    return "Platform owner view with complete local access for this portfolio workspace.";
   }
 
   if (role === "AI Engineer") {

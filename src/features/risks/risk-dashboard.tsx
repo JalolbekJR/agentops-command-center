@@ -14,8 +14,8 @@ export function RiskDashboard() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Risk review"
-        title="Prioritize unsafe automation and policy findings."
-        description="Severity, evidence, owner, and mitigation context stay close enough to act without making every item feel urgent."
+        title="Escalate what can block release."
+        description="Track detected findings through severity, owner, mitigation, and release impact."
       />
       <section className="command-panel p-4 sm:p-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
@@ -25,7 +25,7 @@ export function RiskDashboard() {
               <StatusBadge label={`${highRiskCount} high risk`} tone={highRiskCount > 0 ? "danger" : "success"} />
               <StatusBadge label="Release gate input" tone="info" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Risks explain what can block or slow an agent workflow.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Risks explain what blocks or slows an agent workflow.</h2>
             <p className="muted-copy mt-3 text-sm">
               Each finding carries evidence, owner, mitigation, and escalation context so reviewers can act without hunting through raw logs.
             </p>
@@ -41,13 +41,13 @@ export function RiskDashboard() {
         </div>
       </section>
       <SectionCard
-        title="Risk findings"
-        description="Open issues linked to runs and release readiness."
+        title="Escalation lanes"
+        description="Detected, triaged, owned, mitigated, and tied to release impact."
         action={<StatusBadge label={`${highRiskCount} high risk`} tone={highRiskCount > 0 ? "danger" : "success"} />}
       >
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="risk-board grid gap-4 lg:grid-cols-3">
           {mockRisks.map((risk) => (
-            <article key={risk.id} className="data-card">
+            <article key={risk.id} className="risk-lane-card data-card">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-white">{risk.title}</p>

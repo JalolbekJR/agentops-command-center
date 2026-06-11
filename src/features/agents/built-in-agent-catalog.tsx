@@ -113,8 +113,8 @@ export function BuiltInAgentCatalog() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Built-in agents"
-        title="AgentOps product modules packaged as an internal marketplace."
-        description="Browse governed modules, understand plan access, and route available agents into the local builder studio."
+        title="Governed agent modules marketplace."
+        description="Browse productized modules, compare plan access, and route available agents into the local builder studio."
         action={<PermissionBadge level={access.level} />}
       />
 
@@ -124,9 +124,9 @@ export function BuiltInAgentCatalog() {
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge label="Monetizable modules" tone="success" />
               <StatusBadge label="Plan-aware access" tone="info" />
-              <StatusBadge label="No live agents yet" tone="neutral" />
+              <StatusBadge label="Draft-ready catalog" tone="neutral" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Start with Website QA, then expand into security, release, analytics, and research modules.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Start with Website QA, then expand into security, release, analytics, and research modules.</h2>
             <p className="muted-copy mt-3 max-w-3xl text-sm">
               Each built-in agent should produce operational evidence: run events, artifacts, risks, approvals, evaluations, and audit records.
             </p>

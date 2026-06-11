@@ -2,7 +2,7 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
-const screenshotRoot = join("test-results", "phase-3b3-pre-polish");
+const screenshotRoot = join("test-results", "phase-3b4-elite-ux");
 
 const responsiveRoutes = [
   "/dashboard",
@@ -167,7 +167,7 @@ function screenshotPath(route: string, viewportName: string) {
   return join(screenshotRoot, `${viewportName}-${slug}.png`);
 }
 
-test.describe("responsive pre-polish smoke matrix", () => {
+test.describe("responsive Phase 3B.4 smoke matrix", () => {
   for (const viewport of viewports) {
     for (const route of responsiveRoutes) {
       test(`${route} at ${viewport.name}`, async ({ page }) => {
@@ -192,5 +192,69 @@ test.describe("responsive pre-polish smoke matrix", () => {
         await browserErrors.expectClean();
       });
     }
+  }
+});
+
+test.describe("theme and mode screenshots", () => {
+  const screenshots = [
+    { name: "light-mode-dashboard", route: "/dashboard", theme: "light", mode: "professional", width: 1440, height: 900 },
+    { name: "light-mode-agent-builder", route: "/agent-builder", theme: "light", mode: "professional", width: 1440, height: 900 },
+    { name: "light-mode-connectors", route: "/connectors", theme: "light", mode: "professional", width: 1440, height: 900 },
+    { name: "simple-mode-dashboard", route: "/dashboard", theme: "dark", mode: "simple", width: 1440, height: 900 },
+    { name: "professional-mode-dashboard", route: "/dashboard", theme: "dark", mode: "professional", width: 1440, height: 900 },
+    { name: "simple-mode-agent-builder", route: "/agent-builder", theme: "dark", mode: "simple", width: 1440, height: 900 },
+    { name: "simple-mode-connectors", route: "/connectors", theme: "dark", mode: "simple", width: 1440, height: 900 },
+    { name: "simple-mode-runs", route: "/runs", theme: "dark", mode: "simple", width: 1440, height: 900 }
+  ] as const;
+
+  for (const item of screenshots) {
+    test(`${item.name}`, async ({ page }) => {
+      mkdirSync(screenshotRoot, { recursive: true });
+      await page.setViewportSize({ width: item.width, height: item.height });
+      await page.addInitScript(
+        ({ theme, mode }) => {
+          window.localStorage.setItem("agentops-command-center:theme", theme);
+          window.localStorage.setItem("agentops-command-center:ui-mode", mode);
+        },
+        { theme: item.theme, mode: item.mode }
+      );
+
+      const browserErrors = installBrowserErrorGuards(page);
+      const response = await page.goto(item.route, { waitUntil: "domcontentloaded" });
+
+      expect(response?.ok(), `${item.route} should return a successful document response`).toBe(true);
+      await waitForRoleReady(page);
+      await expectMainContentVisible(page);
+      await expectNoPageOverflow(page);
+      await page.screenshot({ path: join(screenshotRoot, `${item.name}.png`) });
+      await browserErrors.expectClean();
+    });
+  }
+});
+
+test.describe("sidebar state screenshots", () => {
+  const screenshots = [
+    { name: "collapsed-sidebar-dashboard", collapsed: "true" },
+    { name: "expanded-sidebar-dashboard", collapsed: "false" }
+  ] as const;
+
+  for (const item of screenshots) {
+    test(`${item.name}`, async ({ page }) => {
+      mkdirSync(screenshotRoot, { recursive: true });
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.addInitScript(({ collapsed }) => {
+        window.localStorage.setItem("agentops-command-center:sidebar-collapsed", collapsed);
+      }, { collapsed: item.collapsed });
+
+      const browserErrors = installBrowserErrorGuards(page);
+      const response = await page.goto("/dashboard", { waitUntil: "domcontentloaded" });
+
+      expect(response?.ok(), "/dashboard should return a successful document response").toBe(true);
+      await waitForRoleReady(page);
+      await expectMainContentVisible(page);
+      await expectNoPageOverflow(page);
+      await page.screenshot({ path: join(screenshotRoot, `${item.name}.png`) });
+      await browserErrors.expectClean();
+    });
   }
 });

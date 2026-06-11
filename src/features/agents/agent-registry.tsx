@@ -46,7 +46,7 @@ export function AgentRegistry() {
       </section>
       <SectionCard
         title="Agents"
-        description="Operational inventory for the local workspace. Desktop uses a dense table; mobile converts agents into scannable cards."
+        description="Operational inventory with ownership, capability boundaries, health, cost, and approval requirements."
       >
         <div className="data-table-shell hidden lg:block">
           <div className="premium-scroll overflow-x-auto">

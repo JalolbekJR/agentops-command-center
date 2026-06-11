@@ -34,8 +34,8 @@ export function EvaluationSummary() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Evaluation"
-        title="Score agent outcomes before release."
-        description="Quality, safety, reliability, cost, and policy scores feed release readiness without hiding weak signals."
+        title="Release confidence scorecards."
+        description="Compare correctness, safety, reliability, latency, cost, user impact, and policy before a workflow moves forward."
       />
       <section className="command-panel p-4 sm:p-5">
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,0.45fr)]">
@@ -45,7 +45,7 @@ export function EvaluationSummary() {
               <StatusBadge label={`${warningCount} warning`} tone={warningCount > 0 ? "warning" : "success"} />
               <StatusBadge label="Release confidence" tone="info" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Evaluation turns agent output into reviewable release evidence.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Evaluation turns agent output into release evidence.</h2>
             <p className="muted-copy mt-3 text-sm">
               Scorecards show quality, safety, reliability, cost, user impact, and policy compliance so product and QA reviewers can explain release confidence.
             </p>
@@ -61,9 +61,9 @@ export function EvaluationSummary() {
         title="Scorecards"
         description="Weighted results for recent workflow runs."
       >
-        <div className="grid gap-4 xl:grid-cols-3">
+        <div className="scorecard-grid grid gap-4 xl:grid-cols-3">
           {mockEvaluations.map((evaluation) => (
-            <article key={evaluation.id} className="data-card">
+            <article key={evaluation.id} className="evaluation-card data-card">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-white">{evaluation.workflowRunId}</p>

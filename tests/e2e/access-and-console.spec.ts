@@ -177,7 +177,7 @@ test.describe("role and access regressions through the UI", () => {
 
     await page.goto("/agent-builder", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/agent-builder$/);
-    await expect(page.getByRole("heading", { name: "Build a governed agent draft." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Agent Builder Studio." })).toBeVisible();
 
     await expectNavItem(page, "Owner Control", "visible");
     await browserErrors.expectClean();
@@ -191,7 +191,7 @@ test.describe("role and access regressions through the UI", () => {
 
     await page.goto("/agent-builder", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/agent-builder$/);
-    await expect(page.getByRole("heading", { name: "Build a governed agent draft." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Agent Builder Studio." })).toBeVisible();
 
     await page.goto("/owner-control", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/agent-builder$/);
@@ -229,11 +229,11 @@ test.describe("role and access regressions through the UI", () => {
 
     await page.goto("/plans", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/plans$/);
-    await expect(page.getByRole("heading", { name: "Plan packaging for a monetizable agent operations platform." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Commercial packaging without live billing." })).toBeVisible();
 
     await page.goto("/built-in-agents", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/built-in-agents$/);
-    await expect(page.getByRole("heading", { name: "AgentOps product modules packaged as an internal marketplace." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Governed agent modules marketplace." })).toBeVisible();
 
     await page.goto("/owner-control", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/plans$/);

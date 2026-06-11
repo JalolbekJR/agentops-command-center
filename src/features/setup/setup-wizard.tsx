@@ -28,8 +28,8 @@ export function SetupWizard() {
     <div className="space-y-6">
       <PageHeader
         eyebrow="Setup"
-        title="Guided setup for governed agent operations."
-        description="Choose the deployment path, separate owner controls from workspace setup, and move through the checklist without exposing platform-global settings."
+        title="Three steps to a safe workspace."
+        description="Choose the deployment path, verify safe targets, and connect the first evidence-producing agent."
         action={<PermissionBadge level={access.level} />}
       />
 
@@ -41,9 +41,9 @@ export function SetupWizard() {
               <StatusBadge label="Workspace-safe configuration" tone="success" />
               <StatusBadge label="Local demo baseline" tone="neutral" />
             </div>
-            <h2 className="mt-4 text-xl font-semibold text-white sm:text-2xl">Start with safe defaults, then connect agents through workspace-level controls.</h2>
+            <h2 className="mt-4 text-xl font-semibold text-[var(--text-strong)] sm:text-2xl">Start with safe defaults, then connect agents through workspace controls.</h2>
             <p className="muted-copy mt-3 max-w-3xl text-sm">
-              Owner configures platform defaults. Workspace teams configure allowed targets and connectors. Nothing deploys or calls external services in this phase.
+              Owner settings and workspace setup stay separate, so teams can prepare targets and connectors without touching platform-global policy.
             </p>
             <div className="mt-5 grid gap-3 md:grid-cols-3">
               {quickSetupFlow.map(([step, title, detail]) => (

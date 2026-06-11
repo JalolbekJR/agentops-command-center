@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { SectionCard } from "@/components/section-card";
 import { StatCard } from "@/components/stat-card";
@@ -13,6 +15,7 @@ import { mockRisks } from "@/data/mock-risks";
 import { mockRuns } from "@/data/mock-runs";
 import { formatCents, formatDateTime, formatNumber, formatPercent } from "@/lib/format";
 import { approvalStatusTone, runStatusTone } from "@/lib/status";
+import { useDemoState } from "@/lib/demo-state";
 
 const evidenceChain = [
   ["Agent", "Browser QA + Security Sentinel"],
@@ -26,6 +29,7 @@ const evidenceChain = [
 ] as const;
 
 export function OverviewDashboard() {
+  const { uiMode } = useDemoState();
   const activeAgents = mockAgents.filter((agent) => agent.status === "active").length;
   const runningRuns = mockRuns.filter((run) => run.status === "running" || run.status === "waiting_for_approval").length;
   const failedRuns = mockRuns.filter((run) => run.status === "failed").length;
@@ -45,11 +49,13 @@ export function OverviewDashboard() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0">
               <p className="meta-label">Operations baseline</p>
-              <h1 className="mt-2 max-w-4xl text-2xl font-semibold leading-tight text-white sm:text-[2rem]">
-                Control agent work from draft to audited decision.
+              <h1 className="mt-2 max-w-4xl text-2xl font-semibold leading-tight text-[var(--text-strong)] sm:text-[2rem]">
+                Mission Control for governed agent work.
               </h1>
               <p className="muted-copy mt-3 max-w-3xl text-sm">
-                AgentOps connects agents, workflows, runs, evidence, risks, approvals, evaluations, and audit records into one local demo baseline ready for backend integration.
+                {uiMode === "simple"
+                  ? "One risky release step is paused. Review the approval, confirm the evidence, then continue."
+                  : "AgentOps connects agents, runs, evidence, risks, approvals, evaluations, and audit records into one governed release flow."}
               </p>
             </div>
             <Link href="/runs" className="primary-action focus-ring shrink-0">
@@ -80,7 +86,13 @@ export function OverviewDashboard() {
             </div>
           </div>
 
-          <div className="mt-5 evidence-strip">
+          <div className="simple-only mt-5 rounded-lg border border-[var(--line)] bg-[var(--brand-soft)] p-4">
+            <p className="meta-label">Next action</p>
+            <p className="mt-2 text-base font-semibold text-[var(--text-strong)]">Open Approvals and decide the blocked release check.</p>
+            <p className="muted-copy mt-2 text-sm">The run already has evidence, risk context, evaluation, and audit records connected.</p>
+          </div>
+
+          <div className="professional-only mt-5 evidence-strip">
             {evidenceChain.map(([label, detail]) => (
               <div key={label} className="evidence-node">
                 <p className="evidence-node-title">{label}</p>
@@ -94,7 +106,7 @@ export function OverviewDashboard() {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="meta-label">Needs attention</p>
-              <h2 className="mt-2 text-xl font-semibold text-white">Human approval is holding the risky step.</h2>
+              <h2 className="mt-2 text-xl font-semibold text-[var(--text-strong)]">Human approval is holding the risky step.</h2>
               <p className="muted-copy mt-2 text-sm">{currentApproval.reason}</p>
             </div>
             <StatusBadge label={`${pendingApprovals} waiting`} tone={pendingApprovals > 0 ? "warning" : "success"} />
@@ -104,7 +116,7 @@ export function OverviewDashboard() {
             <Link href="/approvals" className="signal-item focus-ring block">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white">Approval gate</p>
+                  <p className="text-sm font-semibold text-[var(--text-strong)]">Approval gate</p>
                   <p className="muted-copy mt-1 text-sm">{currentApproval.assignedRole} decides whether this local run can continue.</p>
                 </div>
                 <StatusBadge label={currentApproval.status} tone={approvalStatusTone(currentApproval.status)} />
@@ -113,21 +125,21 @@ export function OverviewDashboard() {
             <Link href="/risks" className="signal-item focus-ring block">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-white">{highestRisk.title}</p>
+                  <p className="text-sm font-semibold text-[var(--text-strong)]">{highestRisk.title}</p>
                   <p className="muted-copy mt-1 text-sm">{highestRisk.evidenceSummary}</p>
                 </div>
                 <RiskBadge riskLevel={highestRisk.severity} />
               </div>
             </Link>
             <Link href="/audit" className="signal-item focus-ring block">
-              <p className="text-sm font-semibold text-white">Audit readiness</p>
+              <p className="text-sm font-semibold text-[var(--text-strong)]">Audit readiness</p>
               <p className="muted-copy mt-1 text-sm">{mockAuditLogs.length} sensitive events are correlated to decisions and run evidence.</p>
             </Link>
           </div>
 
-          <div className="mt-4 rounded-md border border-emerald-400/20 bg-emerald-400/[0.06] p-3">
-            <p className="text-sm font-semibold text-emerald-100">Recommended operator action</p>
-            <p className="mt-1 text-sm leading-6 text-emerald-100/78">Open the approval queue, inspect the high-risk publish check, then verify evaluation and audit records before continuing the workflow.</p>
+          <div className="notice-card notice-card-success mt-4 p-3">
+            <p className="text-sm font-semibold text-[var(--text-strong)]">Recommended operator action</p>
+            <p className="muted-copy mt-1 text-sm leading-6">Open the approval queue, inspect the high-risk publish check, then verify evaluation and audit records before continuing the workflow.</p>
           </div>
         </aside>
       </section>
@@ -142,13 +154,13 @@ export function OverviewDashboard() {
       <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
         <SectionCard title="Run control lane" description="Every workflow run keeps status, evidence, cost, trace ID, and reviewer context together.">
           <div className="space-y-3">
-            {mockRuns.slice(0, 4).map((run) => (
+            {mockRuns.slice(0, uiMode === "simple" ? 2 : 4).map((run) => (
               <Link key={run.id} href="/runs" className="data-row-link focus-ring p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white">{run.id}</p>
+                    <p className="text-sm font-semibold text-[var(--text-strong)]">{run.id}</p>
                     <p className="muted-copy mt-1 text-sm">{run.summary}</p>
-                    <p className="subtle-copy mt-2 break-words text-xs"><span className="mono-token">{run.traceId}</span> started {formatDateTime(run.startedAt)}</p>
+                    <p className="professional-only subtle-copy mt-2 break-words text-xs"><span className="mono-token">{run.traceId}</span> started {formatDateTime(run.startedAt)}</p>
                   </div>
                   <StatusBadge label={run.status} tone={runStatusTone(run.status)} />
                 </div>
@@ -163,7 +175,7 @@ export function OverviewDashboard() {
               <div key={approval.id} className="data-card-muted p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white">{approval.assignedRole}</p>
+                    <p className="text-sm font-semibold text-[var(--text-strong)]">{approval.assignedRole}</p>
                     <p className="muted-copy mt-1 text-sm">{approval.reason}</p>
                   </div>
                   <StatusBadge label={approval.status} tone={approvalStatusTone(approval.status)} />
@@ -181,7 +193,7 @@ export function OverviewDashboard() {
               <div key={risk.id} className="data-card-muted p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white">{risk.title}</p>
+                    <p className="text-sm font-semibold text-[var(--text-strong)]">{risk.title}</p>
                     <p className="muted-copy mt-1 text-sm">{risk.evidenceSummary}</p>
                   </div>
                   <RiskBadge riskLevel={risk.severity} />
