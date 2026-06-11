@@ -96,6 +96,7 @@ Deeper technical references:
 
 - [Product Brief](docs/PRODUCT_BRIEF.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Backend Implementation Plan](docs/BACKEND_IMPLEMENTATION_PLAN.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
 - [API Contracts](docs/API_CONTRACTS.md)
 - [Security Model](docs/SECURITY_MODEL.md)
