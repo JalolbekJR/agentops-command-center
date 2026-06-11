@@ -1,6 +1,6 @@
 # Phase 3B.3 pre-polish audit
 
-This audit establishes Playwright-based route, console, access, and responsive smoke coverage before the investor-polish pass. It does not certify the app as investor-ready.
+This audit establishes Playwright-based route, console, access, and responsive smoke coverage before the stakeholder-polish pass. It does not certify the app as review-ready.
 
 ## Commands run
 
@@ -151,7 +151,7 @@ None found in this audit pass.
 
 - `/agent-builder`: Improve the studio first impression. The page has the right governing structure, but the first screen should feel more like an agent-building workspace and less like a checklist.
 - Mobile topbar density: The mobile header plus role switcher consumes a large amount of the first viewport across pages.
-- Dashboard first viewport story: The dashboard is stable and readable, but the investor-polish pass should bring the strongest operational evidence higher in the first viewport.
+- Dashboard first viewport story: The dashboard is stable and readable, but the stakeholder-polish pass should bring the strongest operational evidence higher in the first viewport.
 - Connector comparison clarity: The recommended connection path is present, but the tradeoff between built-in agent, Native Protocol, worker, and trace-based options should become faster to compare.
 - Setup wizard “2 to 3 click” feel: The setup page has a recommended path and primary action, but the visual hierarchy can make the next action feel more immediate.
 - Runs, Evaluations, Risks, and Audit product story: These routes pass smoke coverage, but the next polish pass should make their relationship to release readiness more obvious at first glance.
@@ -190,7 +190,7 @@ None found in this audit pass.
 
 ### What remains
 
-- Visual density is still high on mobile for Connector Center and Agent Builder; this is usable but not final investor polish.
+- Visual density is still high on mobile for Connector Center and Agent Builder; this is usable but not final review polish.
 - The demo remains frontend-only with deterministic local data and no production authorization.
 - Route-level interactions are intentionally limited; the next phase can add richer local-state flows only if they stay honest about scope.
 - The design is safer for human review, but it should still receive a human visual pass before screenshots are used in a portfolio case study.
@@ -208,7 +208,7 @@ None found in this audit pass.
 
 Yes, it is safe to start Phase 3B.3 polish from a test and audit infrastructure perspective.
 
-This does not mean the product is investor-ready. It means the current app has a passing route, console, role/access, and responsive smoke baseline that can catch regressions during polish.
+This does not mean the product is review-ready. It means the current app has a passing route, console, role/access, and responsive smoke baseline that can catch regressions during polish.
 
 ## Phase 3B.4 follow-up
 

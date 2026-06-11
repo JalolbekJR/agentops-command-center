@@ -1,243 +1,240 @@
 # Roadmap
 
-## Roadmap Principle
+AgentOps Command Center is built in phases that preserve product clarity, deterministic behavior, security boundaries, QA discipline, and a credible backend path. The roadmap keeps the current prototype honest while showing how it can become a backend-enforced platform.
 
-Build the project in phases that prove architecture, product thinking, UI quality, deterministic behavior, QA discipline, and future backend readiness. Do not skip directly to real AI integrations or deployment before the demo product is coherent.
+## Roadmap principle
 
-## Phase 1: Documentation Foundation
+Do not add live AI integrations, external APIs, payments, deployment, or production data before the control-plane model is coherent. The frontend prototype should prove the product workflow first, then backend enforcement can make the same policies durable.
 
-Status: current phase.
+## Completed: Documentation foundation
 
-Deliverables:
+The project began with product and architecture documentation before implementation.
 
-- README.
-- Product brief.
-- Architecture.
-- Database schema.
-- API contracts.
-- Security model.
-- RBAC matrix.
-- AI agent run model.
-- Workflow engine design.
-- Evaluation and risk model.
-- UI/UX direction.
-- QA test plan.
-- Case study.
-- Roadmap.
-- Interview talking points.
-- Build phases.
-- Resume bullets.
+Completed outputs:
 
-Acceptance criteria:
+- README
+- Product brief
+- Architecture
+- Database schema
+- API contracts
+- Security model
+- RBAC matrix
+- AI agent run model
+- Workflow engine design
+- Evaluation and risk model
+- UI/UX direction
+- QA test plan
+- Case study
+- Roadmap
+- Build phases
 
-- Docs are complete and consistent.
-- No app scaffold exists yet.
-- No package installs were run.
-- No secrets or private integrations exist.
-- Phase 2 prompt is ready.
+## Completed: App scaffold
 
-## Phase 2: App Scaffold
+The app scaffold established the technical foundation.
 
-Goal: create the technical shell without overbuilding.
+Completed outputs:
 
-Deliverables:
+- Next.js App Router with TypeScript
+- Tailwind CSS styling foundation
+- Route structure
+- Typed domain models
+- Deterministic seed data
+- Base app shell and navigation
+- Local development scripts
 
-- Confirm package manager.
-- Scaffold Next.js App Router with TypeScript.
-- Add Tailwind CSS and component foundation after approval.
-- Create route structure.
-- Create domain types.
-- Create deterministic seed data.
-- Add base layout and navigation placeholders.
-- Add basic checks.
+## Completed: Premium product shell
 
-Acceptance criteria:
+The product shell now supports a professional command-center experience.
 
-- App runs locally.
-- Routes compile.
-- Domain types align with docs.
-- No real APIs or secrets.
+Completed outputs:
 
-## Phase 3: Premium UI Shell
+- Desktop sidebar and mobile drawer
+- Topbar with role and view controls
+- Role switcher
+- Dark and light themes
+- Simple and Professional modes
+- Responsive dashboard surface
+- Reusable cards, badges, tables, notices, and action styles
 
-Goal: make the product feel like a serious operations dashboard.
+## Completed: Secure agent platform foundation
 
-Deliverables:
+Phase 3A extended the deterministic prototype into the platform concepts needed for governed agents.
 
-- App shell with sidebar and workspace header.
-- Role switcher.
-- Environment badge.
-- Dashboard overview.
-- Navigation states.
-- Empty/loading/error components.
-- Responsive structure.
+Completed outputs:
 
-Acceptance criteria:
+- Agent connection model
+- AgentOps Native Agent Protocol model
+- Built-in AgentOps agent catalog
+- AI Agent Builder foundation
+- Setup and deployment-mode model
+- Owner Control model
+- Workspace plan and usage-limit model
+- Connector security and privacy model
+- Deterministic TypeScript data, helpers, and UI pages
 
-- Dashboard first viewport communicates product purpose.
-- UI is polished on desktop and mobile.
-- Browser screenshot QA passes for main route.
+## Completed: Local access modeling and UX polish
 
-## Phase 4: Mock Data And Interactions
+Phase 3B added product-grade local route access behavior and major shell polish.
 
-Goal: connect views to deterministic seed data and local state.
+Completed outputs:
 
-Deliverables:
+- Local role persistence
+- Role-aware sidebar visibility
+- Route gates for restricted pages
+- Owner Control restricted to Founder/Admin
+- Agent Builder restricted away from Viewer
+- Settings visible across roles with owner-only concepts gated inside product logic
+- Premium shell/sidebar/topbar cleanup
+- Agent Builder and marketplace layout polish
+- Mobile density improvements
+- Playwright route, console, access, responsive, theme, mode, and screenshot coverage
 
-- Agent registry.
-- Workflow list/detail.
-- Runs list/detail.
-- Tool call history.
-- Approval queue.
-- Evaluation dashboard.
-- Risk dashboard.
-- Browser QA session viewer.
-- Cost analytics.
-- Audit log.
+## Current: Public documentation cleanup
 
-Acceptance criteria:
+Phase 3C makes the repository read like public product documentation.
 
-- Role switcher affects available actions.
-- Approve/reject interactions update local state.
-- Filters and search work on seeded data.
-- Empty states are realistic.
+Planned outputs:
 
-## Phase 3A: Secure Agent Platform Foundation
-
-Goal: extend the deterministic demo into a platform foundation for customer-connected agents and AgentOps-built agents without adding real backend execution.
-
-Deliverables:
-
-- Agent connection model.
-- AgentOps Native Agent Protocol model.
-- Built-in AgentOps agent catalog.
-- AI Agent Builder foundation.
-- Setup and deployment-mode model.
-- Owner-only control plane model.
-- Workspace plan and usage-limit model.
-- Connector security/privacy model.
-- Deterministic TypeScript data, helpers, and premium UI pages.
+- Public-safe README
+- Public case study
+- Technical discussion notes
+- Project outcomes summary
+- Updated roadmap and build-phase docs
+- Cleaned wording around prototype boundaries
+- Clear demo walkthrough and screenshot guide in a future documentation pass
 
 Acceptance criteria:
 
-- Existing Agent, Workflow, WorkflowRun, RunEvent, ToolCall, ApprovalRequest, EvaluationResult, RiskFinding, BrowserSession, CostMetric, AuditLog, and RBAC model remains intact.
-- New connector/setup/billing concepts map back to existing architecture.
-- No real database, auth, external API, payment, deployment, secrets, or agent execution is added.
-- Public demo stays allowlisted, deterministic, and honest.
+- Public docs avoid private preparation language
+- Documentation links are current
+- Prototype boundaries are clear
+- Backend enforcement remains scoped to the roadmap
+- Technical reviewers can understand what exists now and what comes later
 
-## Phase 5: Workflow And Run Simulation
+## Next: Demo walkthrough and QA documentation
 
-Goal: simulate agent operations without external calls.
+The next documentation phase should make the product easier to review.
 
-Deliverables:
+Recommended outputs:
 
-- Deterministic workflow run engine.
-- Step state transitions.
-- Timeline event generation.
-- Approval pause/resume logic.
-- Failure replay.
-- Evaluation and risk derivation.
-- Release gate checks.
+- `docs/DEMO_WALKTHROUGH.md`
+- `docs/TESTING_AND_QA.md`
+- `docs/LOCAL_DEMO_BOUNDARY.md`
+- `docs/SCREENSHOT_GUIDE.md`
+- `CHANGELOG.md`
 
-Acceptance criteria:
+## Future: Workflow simulation
 
-- Runs are replayable.
-- Approval decisions affect run status.
-- Release gates reflect QA/risk/evaluation state.
-- Simulation remains deterministic.
+The next product phase should simulate agent operations without external calls.
 
-## Phase 6: Testing And Browser QA
+Planned outputs:
 
-Goal: make the demo reliable enough for portfolio presentation.
-
-Deliverables:
-
-- Unit tests for domain logic.
-- Component or route-level tests for core UI.
-- Browser QA smoke tests.
-- Accessibility checks.
-- Visual screenshots.
-- Performance review.
-- Release checklist.
+- Deterministic workflow run engine
+- Step state transitions
+- Timeline event generation
+- Approval pause/resume logic
+- Failure replay
+- Evaluation and risk derivation
+- Release gate checks
 
 Acceptance criteria:
 
-- `lint`, `typecheck`, `test`, and `build` pass when configured.
-- Browser QA covers key routes.
-- Mobile and desktop screenshots are clean.
-- No major accessibility blockers.
+- Runs are replayable
+- Approval decisions affect run status
+- Release gates reflect QA, risk, and evaluation state
+- Simulation remains deterministic
 
-## Phase 7: Backend And Database Upgrade
+## Future: Testing and release gates
 
-Goal: define and optionally implement a real backend path.
+The test suite should expand as local workflow behavior grows.
 
-Deliverables:
+Planned outputs:
 
-- Auth strategy.
-- PostgreSQL schema or Prisma model.
-- API route handlers.
-- Server-side RBAC.
-- Audit writer.
-- Data validation.
-- Migration plan.
-- Seed script.
-
-Acceptance criteria:
-
-- Client role switching is replaced or clearly separated from real auth.
-- Permissions are enforced server-side.
-- Database schema matches documented entities.
-- Audit records are append-only in design.
-
-## Phase 8: AI Integration Boundary
-
-Goal: integrate real AI only behind permissions, logging, and evaluation.
-
-Deliverables:
-
-- Model/provider boundary.
-- Tool registry.
-- Permission gate.
-- Prompt/tool-injection safeguards.
-- Cost tracking.
-- Evaluation hooks.
-- Human approval checkpoints.
+- Unit tests for domain logic
+- Component or route-level tests for core UI
+- Browser QA smoke tests
+- Accessibility checks
+- Visual screenshots
+- Performance review
+- Release checklist
 
 Acceptance criteria:
 
-- No model can execute high-risk tools without approval.
-- Secrets are never exposed to model context.
-- Tool calls are logged and auditable.
-- Costs are visible.
+- `lint`, `typecheck`, test, and build commands pass when configured
+- Browser QA covers key routes
+- Mobile and desktop screenshots are clean
+- Major accessibility blockers are documented and resolved
 
-## Phase 9: Deployment And Case-Study Polish
+## Future: Backend and database upgrade
 
-Goal: present the project professionally.
+The backend phase should make the documented security model enforceable.
 
-Deliverables:
+Planned outputs:
 
-- Deployment plan.
-- Production-safe environment handling.
-- Screenshots.
-- README polish.
-- Case-study page or portfolio entry.
-- Demo script.
-- Recruiter/interview talking points.
+- Authentication strategy
+- PostgreSQL schema or Prisma model
+- API route handlers
+- Server-side RBAC
+- Audit writer
+- Data validation
+- Migration plan
+- Seed script
 
 Acceptance criteria:
 
-- Deployment is approved and documented.
-- The project is honest about demo vs production behavior.
-- Screenshots and story support the portfolio goal.
+- Client role switching is replaced or clearly separated from real auth
+- Permissions are enforced server-side
+- Database schema matches documented entities
+- Audit records are append-only by design
 
-## Roadmap Risks
+## Future: AI integration boundary
 
-- Overbuilding before the first app shell exists.
-- Adding real AI integrations before permissions and audit are implemented.
-- Letting UI polish hide weak domain modeling.
-- Claiming production readiness too early.
-- Skipping accessibility and browser QA.
+Real AI and tool execution should be added only behind permissions, logging, and evaluation.
 
-## Roadmap Success Definition
+Planned outputs:
 
-The project succeeds when a technical reviewer can inspect the docs, run the app, follow a workflow run, understand approval/risk/evaluation decisions, and see a credible path from deterministic demo to real backend.
+- Model/provider boundary
+- Tool registry
+- Permission gate
+- Prompt/tool-injection safeguards
+- Cost tracking
+- Evaluation hooks
+- Human approval checkpoints
+
+Acceptance criteria:
+
+- High-risk tools require approval
+- Secrets are never exposed to model context
+- Tool calls are logged and auditable
+- Costs and evaluation outcomes are visible
+
+## Future: Deployment and public case-study polish
+
+Deployment should happen only after quality gates and environment handling are ready.
+
+Planned outputs:
+
+- Deployment plan
+- Production-safe environment handling
+- Screenshot guide
+- Public changelog
+- Public case-study page or portfolio entry
+- Stakeholder walkthrough
+
+Acceptance criteria:
+
+- Deployment is approved and documented
+- The project stays honest about deterministic prototype behavior versus production behavior
+- Screenshots and documentation support technical review
+
+## Roadmap risks
+
+- Adding real AI integrations before permissions and audit are implemented
+- Letting UI polish hide weak domain modeling
+- Claiming production readiness before backend enforcement exists
+- Skipping accessibility and browser QA
+- Letting private planning notes leak into public product docs
+
+## Roadmap success definition
+
+The project succeeds when a technical reviewer can inspect the docs, run the app, follow a workflow run, understand approval, risk, evaluation, and audit decisions, and see a credible path from deterministic frontend prototype to backend-enforced platform.

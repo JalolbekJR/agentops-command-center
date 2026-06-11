@@ -4,21 +4,15 @@ AgentOps Command Center is a portfolio-grade enterprise dashboard concept for co
 
 ## Status
 
-Current phase: **Phase 3B - local product logic, role-aware access rules, route locking, and investor-grade platform UX polish**.
+Current phase: **Phase 3C.1, public documentation cleanup after Phase 3B.4 premium product UX polish**.
 
-Phase 1 documentation is complete and remains the source of truth for product, architecture, domain model, security, RBAC, API contracts, workflow engine, QA strategy, roadmap, and portfolio positioning.
+The repository contains a deterministic frontend control-plane prototype. It demonstrates product flows, role-aware local access behavior, premium shell design, Agent Builder, connector/setup concepts, evaluation, risk, approval, and audit surfaces.
 
-Phase 2 introduced a manually created Next.js App Router scaffold with TypeScript, Tailwind CSS, typed domain models, deterministic mock data, route structure, reusable components, and a premium responsive shell.
-
-Phase 3A extends the same architecture with local deterministic models for agent connection methods, AgentOps Native Agent Protocol, built-in AgentOps agents, setup modes, owner-only controls, AI Agent Builder foundation, and plan/usage limits.
-
-Phase 3B adds deterministic client-side access modeling for the platform pages, role-aware sidebar visibility/locking, direct URL locked states, and more product-grade Setup, Connectors, Built-in Agents, Agent Builder, Plans, and Owner Control surfaces. It still does not add real auth, database persistence, agent execution, external APIs, payments, deployment, or secrets.
-
-Honest scope: this is a portfolio/demo system in progress. It is designed to demonstrate production-minded engineering decisions, but it does not yet include a live backend, real AI integrations, real browser recordings, production customers, or deployed infrastructure.
+The prototype does not include backend authentication, database persistence, live agent execution, external APIs, payments, deployment, production customers, or secrets. Backend enforcement is intentionally scoped to the roadmap.
 
 ## Problem
 
-AI agents can now run multi-step workflows, call tools, write files, browse sites, and make decisions that affect users or internal operations. Most demos show the happy path. Real teams need a way to answer harder questions:
+AI agents can run multi-step workflows, call tools, write files, browse sites, and make decisions that affect users or internal operations. Real teams need a way to answer operational questions:
 
 - Which agent ran, and why?
 - What tools did it call?
@@ -32,47 +26,47 @@ Without this control plane, AI automation becomes difficult to trust, debug, and
 
 ## Solution
 
-AgentOps Command Center models an enterprise AI operations platform where teams can create agents, define workflows, inspect run timelines, review tool calls, approve high-risk actions, evaluate quality, track cost, and audit every important change.
+AgentOps Command Center models an enterprise AI operations platform where teams can create agents, define workflows, inspect run timelines, review tool calls, approve high-risk actions, evaluate quality, track cost, and audit important changes.
 
-The Phase 1 docs define the system before implementation so future UI and backend work has a real architecture instead of a thin dashboard shell.
+The project starts with deterministic local data and public architecture documentation so the product surface, domain model, security model, and backend roadmap share the same language.
 
-## Key Features Planned
+## Key features
 
-- Agent registry with capabilities, risk level, ownership, status, success rate, and cost.
-- Workflow builder model with steps, dependencies, tools, retries, and human approval checkpoints.
-- GitHub Actions-style run timelines with structured events, traces, failures, and replay data.
-- Tool call history with input and output summaries, approval requirements, and risk severity.
-- Human approval queue for production-impacting, sensitive, or policy-blocked actions.
-- Evaluation dashboard for correctness, safety, reliability, latency, cost, user impact, and policy compliance.
-- Risk and security dashboard for prompt injection, tool misuse, data exposure, access, and unsafe automation.
-- Browser QA session viewer for deterministic demo sessions, steps, screenshots, console issues, network issues, and accessibility notes.
-- Cost and token analytics by project, workflow, agent, model, and time window.
-- Audit log for approvals, role changes, workflow edits, release gates, and sensitive activity.
-- Team and RBAC model for Founder/Admin, AI Engineer, QA Reviewer, Security Reviewer, Product Manager, and Viewer roles.
-- Agent connection center for built-in agents, Native Protocol, BYO webhook, SDK, MCP, private worker, and trace import concepts.
-- Built-in AgentOps agents catalog with Website QA Agent as the first recommended monetizable agent.
-- AI Agent Builder foundation for selecting templates, connector methods, capabilities, allowed targets, approval gates, and plan limits.
-- Setup, deployment-mode, owner-control, and plan/usage views for future SaaS and enterprise packaging.
+- Agent registry with capabilities, risk level, ownership, status, success rate, and cost
+- Workflow model with steps, dependencies, tools, retries, and human approval checkpoints
+- Run timelines with structured events, traces, failures, and replay context
+- Tool call history with input and output summaries, approval requirements, and risk severity
+- Human approval queue for sensitive or policy-blocked actions
+- Evaluation dashboard for correctness, safety, reliability, latency, cost, user impact, and policy compliance
+- Risk and security dashboard for prompt injection, tool misuse, data exposure, access, and unsafe automation
+- Browser QA session viewer for deterministic session records and quality evidence
+- Cost and token analytics by project, workflow, agent, model, and time window
+- Audit log for approvals, role changes, workflow edits, release gates, and sensitive activity
+- Role model for Founder/Admin, AI Engineer, QA Reviewer, Security Reviewer, Product Manager, and Viewer roles
+- Agent connection center for built-in agents, Native Protocol, bring-your-own webhook, software development kit (SDK), Model Context Protocol (MCP), private worker, and trace import concepts
+- Built-in AgentOps agents catalog with Website QA Agent as the first recommended agent
+- AI Agent Builder foundation for templates, connector methods, capabilities, allowed targets, approval gates, and plan limits
+- Setup, deployment-mode, owner-control, and plan/usage views for future SaaS and enterprise packaging
 
-## Why This Project Exists
+## Product and engineering scope
 
-This project is meant to show more than UI taste. It is designed to demonstrate:
+This project is designed to demonstrate:
 
-- Computer science fundamentals through state machines, graph workflows, event timelines, queues, retries, and deterministic replay.
-- Full-stack architecture through API contracts, domain modeling, database design, RBAC, and future backend boundaries.
-- AI systems thinking through agent run models, tool permissions, evaluation, risk scoring, and prompt/tool-injection awareness.
-- Product judgment through role-specific workflows, realistic enterprise use cases, and careful MVP boundaries.
-- Security maturity through least privilege, approval gates, auditability, secret handling, and trust boundaries.
-- QA discipline through release gates, browser QA plans, accessibility checks, and performance criteria.
+- State machines, workflow graphs, event timelines, retries, and deterministic replay
+- API contracts, domain modeling, database design, RBAC, and future backend boundaries
+- AI systems thinking through agent run models, tool permissions, evaluation, risk scoring, and prompt/tool-injection awareness
+- Product judgment through role-specific workflows, realistic enterprise use cases, and careful minimum viable product boundaries
+- Security maturity through least privilege, approval gates, auditability, secret handling, and trust boundaries
+- QA discipline through release gates, browser QA plans, accessibility checks, and performance criteria
 
-## Architecture Summary
+## Architecture summary
 
-Phase 1 defines a staged architecture:
+The architecture follows a staged path:
 
-1. **Static demo foundation**: deterministic local data, typed domain models, and polished UI once the app is scaffolded.
-2. **Interactive simulation**: local workflow run engine, approval actions, filters, failure replay, and role switching.
-3. **Backend upgrade path**: authenticated API, PostgreSQL database, RBAC enforcement, queue/worker processing, WebSocket updates, and real AI/browser automation boundaries.
-4. **Production hardening path**: observability, rate limits, audit retention, secret references, environment boundaries, and deployment controls.
+1. **Deterministic frontend foundation**: local data, typed domain models, and a polished product shell
+2. **Interactive simulation**: local workflow run engine, approval actions, filters, failure replay, and role switching
+3. **Backend upgrade path**: authenticated API, PostgreSQL database, RBAC enforcement, queue/worker processing, live updates, and real AI/browser automation boundaries
+4. **Production hardening path**: observability, rate limits, audit retention, secret references, environment boundaries, and deployment controls
 
 The recommended future stack is:
 
@@ -85,7 +79,7 @@ The recommended future stack is:
 - Future queue/worker model for runs
 - Future WebSocket or server-sent events for live run updates
 
-## Documentation Map
+## Documentation map
 
 - [Product Brief](docs/PRODUCT_BRIEF.md)
 - [Architecture](docs/ARCHITECTURE.md)
@@ -100,9 +94,9 @@ The recommended future stack is:
 - [QA Test Plan](docs/QA_TEST_PLAN.md)
 - [Case Study](docs/CASE_STUDY.md)
 - [Roadmap](docs/ROADMAP.md)
-- [Interview Talking Points](docs/INTERVIEW_TALKING_POINTS.md)
+- [Technical Discussion Notes](docs/TECHNICAL_DISCUSSION_NOTES.md)
 - [Build Phases](docs/BUILD_PHASES.md)
-- [Resume Bullets](docs/RESUME_BULLETS.md)
+- [Project Outcomes](docs/PROJECT_OUTCOMES.md)
 - [Agent Connection Model](docs/AGENT_CONNECTION_MODEL.md)
 - [AgentOps Native Protocol](docs/AGENTOPS_NATIVE_PROTOCOL.md)
 - [Built-In Agents Catalog](docs/BUILT_IN_AGENTS_CATALOG.md)
@@ -111,26 +105,28 @@ The recommended future stack is:
 - [Connector Security Model](docs/CONNECTOR_SECURITY_MODEL.md)
 - [AI Agent Builder Model](docs/AI_AGENT_BUILDER_MODEL.md)
 - [Owner Control Plane](docs/OWNER_CONTROL_PLANE.md)
+- [Phase 3B.3 Pre-Polish Audit](docs/PHASE_3B3_PRE_POLISH_AUDIT.md)
+- [Phase 3B.4 Elite UX Polish](docs/PHASE_3B4_ELITE_UX_POLISH.md)
 
 ## Screenshots
 
-Screenshots will be added after the Phase 2 and Phase 3 app shell and dashboard UI are implemented.
+The Playwright screenshot suite writes visual review captures to:
 
-Planned screenshot set:
+```text
+test-results/phase-3b4-elite-ux/
+```
 
-- Executive dashboard overview.
-- Agent registry.
-- Workflow run timeline.
-- Human approval queue.
-- Risk and evaluation dashboard.
-- Browser QA session detail.
-- Audit log and RBAC settings.
+Important captures include:
 
-## Local Development
+- Dashboard at 1440x900, 1366x768, and 390x844
+- Agent Builder at 1440x900, 1366x768, and 390x844
+- Light mode dashboard, Agent Builder, and Connectors
+- Simple mode dashboard, Agent Builder, Connectors, and Runs
+- Expanded and collapsed sidebar dashboard states
 
-The app scaffold exists, but dependencies may not be installed yet. Package installation is intentionally approval-gated.
+## Local development
 
-After dependency installation is approved, the expected local flow is:
+Install dependencies only after reviewing the project scripts and package manager state.
 
 ```bash
 npm install
@@ -140,22 +136,34 @@ npm run typecheck
 npm run build
 ```
 
-The current scaffold uses local deterministic mock data only. It does not connect to external APIs, auth providers, databases, AI services, browser automation, deployment services, or secrets.
+The current scaffold uses local deterministic mock data only. It does not connect to external APIs, auth providers, databases, AI services, browser automation services, deployment services, or secrets.
+
+## Quality checks
+
+Use these checks before presenting or merging documentation and frontend changes:
+
+```bash
+npm run typecheck
+npm run lint
+npm run build
+```
+
+The broader Playwright suite is available when visual or route QA is needed:
+
+```bash
+npm run e2e
+```
 
 ## Roadmap
 
-- Phase 1: Documentation and architecture foundation.
-- Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, seed data, and first dashboard UI.
-- Phase 3: Premium UI shell and dashboard overview.
-- Phase 3A: Secure agent platform foundation, connector/setup model, owner controls, built-in agents, Native Protocol, builder UI, and plan limits.
-- Phase 3B: Local RBAC product logic, route gates, role-aware navigation, and premium platform UX.
-- Phase 4: Mock interactions, role switcher, filters, approvals, and run details.
-- Phase 5: Workflow simulation, deterministic event replay, evaluation, and risk logic.
-- Phase 6: Tests, browser QA, accessibility, performance checks, and release gates.
-- Phase 7: Backend/database upgrade path with auth, RBAC, PostgreSQL, and API handlers.
-- Phase 8: Real AI integration boundary with tool permissions and observability.
-- Phase 9: Deployment plan, screenshots, and case-study polish.
+- Phase 1: Documentation and architecture foundation
+- Phase 2: Next.js scaffold, TypeScript setup, route map, domain types, seed data, and first dashboard UI
+- Phase 3: Premium UI shell and dashboard overview
+- Phase 3A: Secure agent platform foundation, connector/setup model, owner controls, built-in agents, Native Protocol, builder UI, and plan limits
+- Phase 3B: Local RBAC product logic, route gates, role-aware navigation, and premium platform UX
+- Phase 3C: Public documentation cleanup, case study, walkthrough, and release-readiness documentation
+- Future backend: authentication, PostgreSQL persistence, server-side RBAC, API handlers, audit writer, queue/worker execution, and governed AI/tool integration
 
-## Portfolio Value
+## Project outcomes
 
-This project is intended to prove that I can design and build a serious product system, not just prompt a UI into existence. The docs and future implementation are structured to show product thinking, architecture, domain modeling, AI operations, security, QA, and practical delivery judgment.
+AgentOps Command Center demonstrates product and engineering judgment beyond surface-level UI. The repository connects product reasoning, architecture, domain modeling, AI operations, security, QA, and practical delivery constraints into one reviewable project.

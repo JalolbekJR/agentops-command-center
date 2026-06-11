@@ -111,7 +111,7 @@ Recommended demo retry policy:
 
 ## Deterministic Mock Run Model For Phase 1 And Early App Phases
 
-The demo should use deterministic run records rather than random fake data.
+The demo should use deterministic run records rather than random synthetic data.
 
 Rules:
 

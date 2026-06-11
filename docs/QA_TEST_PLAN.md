@@ -175,7 +175,7 @@ A future release should be blocked when:
 - [ ] Audit log includes high-risk decisions.
 - [ ] Empty/loading/error states are domain-specific.
 - [ ] Mobile layout is usable.
-- [ ] Copy avoids fake production claims.
+- [ ] Copy avoids misleading production claims.
 
 ## Future CI Plan
 

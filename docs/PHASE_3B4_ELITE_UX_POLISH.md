@@ -3,7 +3,7 @@
 ## Baseline
 
 - Branch: `phase-3b4-elite-ux-polish`
-- Baseline commit: `aa410be Polish AgentOps investor showcase UI`
+- Baseline commit: `aa410be Polish AgentOps stakeholder showcase UI`
 - Baseline checks before editing:
   - `npm run typecheck` passed.
   - `npm run lint` passed.
@@ -170,9 +170,9 @@ The matrix includes desktop, laptop, mobile, light mode, and Simple/Professional
 - Light mode is much more coherent, but lower metric surfaces remain slightly muted and should receive a human design pass before portfolio publication.
 - Default Professional mobile is still information-dense on Agent Builder and Connectors, though it no longer clips or overflows in the tested viewport.
 - The app remains a frontend-only deterministic demo; production authorization, persistence, execution, and billing are intentionally out of scope.
-- Human visual review is still recommended before calling the screenshots investor-ready.
+- Human visual review is still recommended before calling the screenshots review-ready.
 
-## Phase 3B.4.1 Final Investor Polish Cleanup
+## Phase 3B.4.1 Final stakeholder polish cleanup
 
 ### Topbar and Experience Control
 
@@ -251,7 +251,7 @@ New targeted screenshots added in this cleanup:
 
 - Agent Builder is meaningfully more studio-like, but it is still a frontend-only local draft model; a human visual pass should decide whether the workbench feels sufficiently productized for portfolio hero screenshots.
 - Mobile first view is cleaner, but the combined role and experience controls still consume noticeable vertical space.
-- Light mode is stronger and no longer reads disabled, but it should still be reviewed by a human before claiming investor-ready polish.
+- Light mode is stronger and no longer reads disabled, but it should still be reviewed by a human before claiming review-ready polish.
 
 ## Phase 3B.4.2 Shell-Only Final Premium Fix
 
