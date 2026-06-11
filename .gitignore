@@ -14,3 +14,12 @@ test-results/
 tsconfig.tsbuildinfo
 
 tsconfig.tsbuildinfo
+
+# Local/private notes - never commit
+*.private.md
+*.local.md
+*.personal.md
+private_notes/
+private-notes/
+.local-notes/
+_private/
