@@ -1,7 +1,8 @@
 import { and, asc, desc, eq, type SQL } from "drizzle-orm";
 import { databaseUnavailableError, isApiError } from "@/server/api/errors";
 import { pageRows, type PaginationInput } from "@/server/api/pagination";
-import { resolveTemporaryDemoSession, type DemoSession } from "@/server/auth/demo-session";
+import type { AuthenticatedServerAuthContext } from "@/server/auth/context";
+import { resolveTemporaryDemoSession } from "@/server/auth/demo-session";
 import { createDatabaseConnection, type DatabaseConnection } from "@/server/db/client";
 import {
   agents,
@@ -16,7 +17,9 @@ import {
   workspaceEntitlements,
   workspaces
 } from "@/server/db/schema";
-import { assertWorkspaceReadable, requireReadableProject } from "@/server/policy/read-access";
+import { assertReadOnlyRouteAllowed } from "@/server/policy/authorize";
+import type { PermissionKey } from "@/server/policy/permissions";
+import { requireProjectRead, requireWorkspaceRead } from "@/server/policy/read-access";
 import {
   toAgentDto,
   toApprovalDto,
@@ -52,15 +55,17 @@ function addPageLimit(pagination: PaginationInput) {
 export class ReadModels {
   constructor(
     private readonly db: Db,
-    private readonly session: DemoSession
+    private readonly authContext: AuthenticatedServerAuthContext
   ) {}
 
   getSession() {
-    return toSessionDto(this.session);
+    return toSessionDto(this.authContext);
   }
 
   async listWorkspaces(query: ProjectListQuery) {
-    const conditions: SQL[] = [eq(workspaces.id, this.session.workspace.id)];
+    requireWorkspaceRead(this.authContext, this.authContext.workspace.internalWorkspaceId);
+
+    const conditions: SQL[] = [eq(workspaces.id, this.authContext.workspace.internalWorkspaceId)];
 
     if (query.status) {
       conditions.push(eq(workspaces.status, query.status));
@@ -86,7 +91,9 @@ export class ReadModels {
   }
 
   async listProjects(query: ProjectListQuery) {
-    const conditions: SQL[] = [eq(projects.workspaceId, this.session.workspace.id)];
+    requireWorkspaceRead(this.authContext, this.authContext.workspace.internalWorkspaceId);
+
+    const conditions: SQL[] = [eq(projects.workspaceId, this.authContext.workspace.internalWorkspaceId)];
 
     if (query.status) {
       conditions.push(eq(projects.status, query.status));
@@ -114,13 +121,13 @@ export class ReadModels {
   }
 
   async getProject(projectId: string) {
-    const project = await requireReadableProject(this.db, this.session, projectId);
+    const project = await requireProjectRead(this.db, this.authContext, projectId);
 
     return toProjectDto(project);
   }
 
   async listAgents(projectId: string, query: AgentListQuery) {
-    await requireReadableProject(this.db, this.session, projectId);
+    await requireProjectRead(this.db, this.authContext, projectId);
 
     const conditions: SQL[] = [eq(agents.projectId, projectId)];
 
@@ -159,7 +166,7 @@ export class ReadModels {
   }
 
   async listRuns(projectId: string, query: RunListQuery) {
-    await requireReadableProject(this.db, this.session, projectId);
+    await requireProjectRead(this.db, this.authContext, projectId);
 
     const conditions: SQL[] = [eq(runs.projectId, projectId)];
 
@@ -198,7 +205,7 @@ export class ReadModels {
   }
 
   async listApprovals(projectId: string, query: ApprovalListQuery) {
-    await requireReadableProject(this.db, this.session, projectId);
+    await requireProjectRead(this.db, this.authContext, projectId);
 
     const conditions: SQL[] = [eq(approvals.projectId, projectId)];
 
@@ -238,7 +245,7 @@ export class ReadModels {
   }
 
   async listRisks(projectId: string, query: RiskListQuery) {
-    await requireReadableProject(this.db, this.session, projectId);
+    await requireProjectRead(this.db, this.authContext, projectId);
 
     const conditions: SQL[] = [eq(riskFindings.projectId, projectId)];
 
@@ -279,7 +286,7 @@ export class ReadModels {
   }
 
   async listEvaluations(projectId: string, query: EvaluationListQuery) {
-    await requireReadableProject(this.db, this.session, projectId);
+    await requireProjectRead(this.db, this.authContext, projectId);
 
     const conditions: SQL[] = [eq(evaluationResults.projectId, projectId)];
 
@@ -315,7 +322,7 @@ export class ReadModels {
   }
 
   async listAuditEvents(projectId: string, query: AuditListQuery) {
-    const project = await requireReadableProject(this.db, this.session, projectId);
+    const project = await requireProjectRead(this.db, this.authContext, projectId);
     const conditions: SQL[] = [eq(auditEvents.workspaceId, project.workspaceId), eq(auditEvents.projectId, projectId)];
 
     if (query.actorUserId) {
@@ -351,7 +358,7 @@ export class ReadModels {
   }
 
   async listUsage(projectId: string, query: UsageListQuery) {
-    const project = await requireReadableProject(this.db, this.session, projectId);
+    const project = await requireProjectRead(this.db, this.authContext, projectId);
     const conditions: SQL[] = [eq(usageCounters.workspaceId, project.workspaceId), eq(usageCounters.projectId, projectId)];
 
     if (query.meterKey) {
@@ -381,7 +388,7 @@ export class ReadModels {
   }
 
   async listWorkspaceEntitlements(workspaceId: string, query: PaginationInput) {
-    assertWorkspaceReadable(this.session, workspaceId);
+    requireWorkspaceRead(this.authContext, workspaceId);
 
     const rows = await this.db
       .select({
@@ -406,7 +413,7 @@ export class ReadModels {
   }
 
   async listWorkspacePlanLimits(workspaceId: string, query: PaginationInput) {
-    assertWorkspaceReadable(this.session, workspaceId);
+    requireWorkspaceRead(this.authContext, workspaceId);
 
     const rows = await this.db
       .select({
@@ -432,7 +439,11 @@ export class ReadModels {
 
 }
 
-export async function withReadModels<T>(handler: (models: ReadModels) => Promise<T>) {
+export async function withReadModels<T>(
+  requestId: string,
+  requiredPermission: PermissionKey,
+  handler: (models: ReadModels, authContext: AuthenticatedServerAuthContext) => Promise<T>
+) {
   let connection: DatabaseConnection;
 
   try {
@@ -442,8 +453,10 @@ export async function withReadModels<T>(handler: (models: ReadModels) => Promise
   }
 
   try {
-    const session = await resolveTemporaryDemoSession(connection.db);
-    return await handler(new ReadModels(connection.db, session));
+    const authContext = await resolveTemporaryDemoSession(connection.db, requestId);
+    assertReadOnlyRouteAllowed(authContext, requiredPermission);
+
+    return await handler(new ReadModels(connection.db, authContext), authContext);
   } catch (error: unknown) {
     if (isApiError(error)) {
       throw error;

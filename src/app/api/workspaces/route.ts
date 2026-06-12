@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   return handleApiRequest(request, async ({ requestId }) => {
     const query = parseQuery(request, workspaceListQuerySchema);
-    const result = await withReadModels((readModels) => readModels.listWorkspaces(query));
+    const result = await withReadModels(requestId, "workspace.read", (readModels) => readModels.listWorkspaces(query));
 
     return listResponse(result.data, {
       requestId,

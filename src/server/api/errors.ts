@@ -1,5 +1,6 @@
 export type ApiErrorCode =
   | "access_denied"
+  | "authentication_required"
   | "database_unavailable"
   | "internal_error"
   | "resource_not_found"
@@ -38,6 +39,10 @@ export function resourceNotFoundError() {
 
 export function accessDeniedError() {
   return new ApiError("access_denied", 403, "The current server session cannot read this resource.");
+}
+
+export function authenticationRequiredError() {
+  return new ApiError("authentication_required", 401, "Authentication is required for this request.");
 }
 
 export function sessionUnavailableError() {

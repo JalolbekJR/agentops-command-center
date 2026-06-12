@@ -14,7 +14,7 @@ export async function GET(request: Request, context: WorkspaceRouteContext) {
   return handleApiRequest(request, async ({ requestId }) => {
     const { workspaceId } = parseWorkspaceParams(await context.params);
     const query = parseQuery(request, paginationQuerySchema);
-    const result = await withReadModels((readModels) => readModels.listWorkspaceEntitlements(workspaceId, query));
+    const result = await withReadModels(requestId, "entitlement.read", (readModels) => readModels.listWorkspaceEntitlements(workspaceId, query));
 
     return listResponse(result.data, {
       requestId,

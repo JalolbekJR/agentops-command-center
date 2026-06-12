@@ -2,41 +2,27 @@ import { and, eq } from "drizzle-orm";
 import type { DatabaseConnection } from "@/server/db/client";
 import { roles, users, workspaceMembers, workspaces } from "@/server/db/schema";
 import { sessionUnavailableError } from "@/server/api/errors";
+import type { AuthenticatedServerAuthContext } from "./context";
+import { permissionsForDemoRole } from "@/server/policy/permissions";
 
 export const TEMPORARY_DEMO_USER_ID = "user_admin";
 export const TEMPORARY_DEMO_WORKSPACE_ID = "team_ai_factory";
 
-export interface DemoSession {
-  mode: "temporary-demo-session";
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    avatarInitials: string;
-  };
-  workspace: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-  role: {
-    id: string;
-    name: string;
-  };
-}
+export type TemporaryDemoAuthContext = AuthenticatedServerAuthContext & {
+  mode: "temporary_demo";
+};
 
 type Db = DatabaseConnection["db"];
 
-export async function resolveTemporaryDemoSession(db: Db): Promise<DemoSession> {
+export async function resolveTemporaryDemoSession(db: Db, requestId: string): Promise<TemporaryDemoAuthContext> {
   const [session] = await db
     .select({
+      membershipId: workspaceMembers.id,
       userId: users.id,
       userName: users.name,
-      userEmail: users.email,
       avatarInitials: users.avatarInitials,
       workspaceId: workspaces.id,
       workspaceName: workspaces.name,
-      workspaceSlug: workspaces.slug,
       roleId: roles.id,
       roleName: roles.name
     })
@@ -60,21 +46,30 @@ export async function resolveTemporaryDemoSession(db: Db): Promise<DemoSession> 
   }
 
   return {
-    mode: "temporary-demo-session",
+    mode: "temporary_demo",
+    requestId,
     user: {
-      id: session.userId,
-      name: session.userName,
-      email: session.userEmail,
-      avatarInitials: session.avatarInitials
+      internalUserId: session.userId,
+      displayName: session.userName,
+      initials: session.avatarInitials
+    },
+    membership: {
+      internalMembershipId: session.membershipId,
+      status: "active"
     },
     workspace: {
-      id: session.workspaceId,
-      name: session.workspaceName,
-      slug: session.workspaceSlug
+      internalWorkspaceId: session.workspaceId,
+      displayName: session.workspaceName
     },
     role: {
-      id: session.roleId,
-      name: session.roleName
+      internalRoleId: session.roleId,
+      displayName: session.roleName,
+      permissions: permissionsForDemoRole(session.roleName)
+    },
+    deploymentGate: {
+      isDemoOnly: true,
+      publicDeploymentAllowed: false,
+      reason: "Temporary seeded demo identity is allowed only for local read-only verification."
     }
   };
 }
