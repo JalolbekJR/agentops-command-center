@@ -17,6 +17,19 @@ import {
   workspaces
 } from "@/server/db/schema";
 import { assertWorkspaceReadable, requireReadableProject } from "@/server/policy/read-access";
+import {
+  toAgentDto,
+  toApprovalDto,
+  toAuditEventDto,
+  toEntitlementDto,
+  toEvaluationDto,
+  toProjectDto,
+  toRiskDto,
+  toRunDto,
+  toSessionDto,
+  toUsageDto,
+  toWorkspaceDto
+} from "./read-dtos";
 
 type Db = DatabaseConnection["db"];
 type ProjectListQuery = PaginationInput & { status?: "active" | "paused" | "archived" };
@@ -43,7 +56,7 @@ export class ReadModels {
   ) {}
 
   getSession() {
-    return this.session;
+    return toSessionDto(this.session);
   }
 
   async listWorkspaces(query: ProjectListQuery) {
@@ -69,7 +82,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toWorkspaceDto), query);
   }
 
   async listProjects(query: ProjectListQuery) {
@@ -97,11 +110,13 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toProjectDto), query);
   }
 
   async getProject(projectId: string) {
-    return requireReadableProject(this.db, this.session, projectId);
+    const project = await requireReadableProject(this.db, this.session, projectId);
+
+    return toProjectDto(project);
   }
 
   async listAgents(projectId: string, query: AgentListQuery) {
@@ -140,7 +155,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toAgentDto), query);
   }
 
   async listRuns(projectId: string, query: RunListQuery) {
@@ -179,7 +194,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toRunDto), query);
   }
 
   async listApprovals(projectId: string, query: ApprovalListQuery) {
@@ -219,7 +234,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toApprovalDto), query);
   }
 
   async listRisks(projectId: string, query: RiskListQuery) {
@@ -260,7 +275,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toRiskDto), query);
   }
 
   async listEvaluations(projectId: string, query: EvaluationListQuery) {
@@ -296,7 +311,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toEvaluationDto), query);
   }
 
   async listAuditEvents(projectId: string, query: AuditListQuery) {
@@ -332,7 +347,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toAuditEventDto), query);
   }
 
   async listUsage(projectId: string, query: UsageListQuery) {
@@ -362,7 +377,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toUsageDto), query);
   }
 
   async listWorkspaceEntitlements(workspaceId: string, query: PaginationInput) {
@@ -387,7 +402,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toEntitlementDto), query);
   }
 
   async listWorkspacePlanLimits(workspaceId: string, query: PaginationInput) {
@@ -399,6 +414,7 @@ export class ReadModels {
         workspaceId: usageCounters.workspaceId,
         projectId: usageCounters.projectId,
         meterKey: usageCounters.meterKey,
+        used: usageCounters.used,
         limitValue: usageCounters.limitValue,
         hardLimit: usageCounters.hardLimit,
         periodStart: usageCounters.periodStart,
@@ -411,7 +427,7 @@ export class ReadModels {
       .limit(addPageLimit(query))
       .offset(query.cursor);
 
-    return pageRows(rows, query);
+    return pageRows(rows.map(toUsageDto), query);
   }
 
 }

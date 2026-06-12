@@ -1,89 +1,62 @@
-# AgentOps Native Agent Protocol
+# AgentOps Native Protocol
 
-## Goal
+## Purpose
 
-AgentOps Native Agent Protocol is the optimized event format for agents and workers that want to report structured, auditable execution evidence into AgentOps. It is designed to map directly into run timelines, tool calls, approvals, risks, evaluations, artifacts, costs, and audit logs.
+The AgentOps Native Protocol is the future event contract for agent runtimes that want to report runs, tool activity, approvals, risks, evaluations, artifacts, and cost summaries into AgentOps Command Center.
 
-Phase 3A defines the model only. No real ingestion endpoint exists yet.
+This public document describes goals and safety principles only. Detailed event examples, internal mappings, and runtime identifiers are kept in ignored private documentation.
+
+## Goals
+
+- Give future agents a consistent way to report operational evidence.
+- Support run timelines, review queues, evaluations, risk summaries, and audit summaries.
+- Keep untrusted tool output separate from system instructions.
+- Preserve human review points before high-impact automation.
+- Avoid exposing secrets or raw sensitive payloads to the UI.
+- Keep public examples generic and non-operational.
 
 ## Event Categories
 
-- `run.started`
-- `run.status_changed`
-- `run.event`
-- `run.log`
-- `step.event`
-- `tool.started`
-- `tool.completed`
-- `tool.failed`
-- `artifact.created`
-- `approval.requested`
-- `risk.created`
-- `evaluation.completed`
-- `cost.recorded`
-- `run.completed`
-- `run.failed`
-- `run.cancelled`
+The protocol is organized around high-level event categories:
 
-## Base Event Shape
+- run lifecycle
+- run timeline
+- tool summary
+- approval request or decision summary
+- risk summary
+- evaluation summary
+- cost summary
+- artifact reference
+- audit summary
 
-```json
-{
-  "id": "native_event_demo_001",
-  "category": "run.started",
-  "projectId": "project_agentops",
-  "connectorId": "connector_native_protocol",
-  "workflowRunId": "run_release_001",
-  "traceId": "trace_release_001",
-  "sequence": 1,
-  "occurredAt": "2026-06-02T10:30:00Z",
-  "actorRef": "agentref_demo_website_qa",
-  "redactionLevel": "summary_only",
-  "auditRequired": true
-}
-```
+Exact event shapes and mapping details are intentionally not published in this public file.
 
-## Protocol Principles
+## Safety Principles
 
-- Events are ordered by sequence.
-- Events are idempotent by stable event ID.
-- Events carry summaries and references, not raw secret payloads.
-- Artifact fields reference stored artifacts; they do not embed screenshots, logs, or private files.
-- Tool outputs are data, not instructions.
-- High-risk actions create approvals or risks instead of silently continuing.
-- Future backend validates schema, connector token, workspace, plan, and RBAC before accepting writes.
+- Treat external content and tool output as untrusted data.
+- Validate event payloads server-side before persistence.
+- Scope every event to an authorized workspace/project boundary.
+- Store summaries by default, not raw sensitive payloads.
+- Never include secret values in event payloads.
+- Use redaction and retention rules for logs, artifacts, and screenshots.
+- Require human review for high-impact or policy-sensitive actions.
+- Keep ingestion disabled until auth, token handling, replay protection, and audit rules are implemented.
 
-## Mapping Table
+## Current Status
 
-| Event | Existing Model Mapping |
-| --- | --- |
-| `run.started` | WorkflowRun, RunEvent, AuditLog |
-| `run.event`, `step.event`, `run.log` | RunEvent |
-| `tool.started`, `tool.completed`, `tool.failed` | ToolCall, RunEvent |
-| `artifact.created` | AgentArtifact, future BrowserSession/Report reference |
-| `approval.requested` | ApprovalRequest, RunEvent, AuditLog |
-| `risk.created` | RiskFinding, RunEvent |
-| `evaluation.completed` | EvaluationResult, RunEvent |
-| `cost.recorded` | CostMetric, RunEvent |
-| `run.completed`, `run.failed`, `run.cancelled` | WorkflowRun status, RunEvent, AuditLog |
+The current application does not ingest live native protocol events. The public demo uses deterministic local data only.
 
-## Security Requirements
+## Future Work
 
-- No raw secrets.
-- No secret values in logs.
-- No private URLs in public demo events.
-- Secret references only, such as `secretref_demo_browser_worker`.
-- Connector tokens are future backend-only and hashed.
-- Every write event is attributable by connector, actor reference, trace, and project.
-- Redaction level must be explicit.
-- Event validation must reject unknown categories and malformed IDs.
+Before this protocol becomes live, the project should add:
 
-## Future Backend Requirements
-
-- Authenticated ingest endpoint.
-- Hashed connector token verification.
-- Replay protection.
-- Event sequence ordering.
-- Per-plan usage metering.
-- Server-side RBAC and tenant isolation.
-- Audit write for setup, connector, approval, risk, and owner-control changes.
+- authenticated ingestion,
+- schema validation,
+- replay protection,
+- source attribution,
+- rate limits,
+- payload size limits,
+- secret redaction,
+- audit rules,
+- safe retention policy,
+- worker isolation for live agent execution.
