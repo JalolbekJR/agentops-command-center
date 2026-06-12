@@ -14,6 +14,7 @@
     "e2e:ui": "playwright test --ui",
     "e2e:headed": "playwright test --headed",
     "api:verify-exposure": "tsx scripts/verify-api-exposure.ts",
+    "api:verify-auth-boundary": "tsx scripts/verify-api-auth-boundary.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed-db.ts"

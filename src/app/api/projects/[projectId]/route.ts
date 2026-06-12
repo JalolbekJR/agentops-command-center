@@ -13,7 +13,7 @@ interface ProjectRouteContext {
 export async function GET(request: Request, context: ProjectRouteContext) {
   return handleApiRequest(request, async ({ requestId }) => {
     const { projectId } = parseProjectParams(await context.params);
-    const project = await withReadModels((readModels) => readModels.getProject(projectId));
+    const project = await withReadModels(requestId, "project.read", (readModels) => readModels.getProject(projectId));
 
     return successResponse(project, requestId);
   });

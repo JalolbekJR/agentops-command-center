@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   return handleApiRequest(request, async ({ requestId }) => {
     const query = parseQuery(request, projectListQuerySchema);
-    const result = await withReadModels((readModels) => readModels.listProjects(query));
+    const result = await withReadModels(requestId, "project.read", (readModels) => readModels.listProjects(query));
 
     return listResponse(result.data, {
       requestId,

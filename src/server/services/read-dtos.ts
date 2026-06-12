@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { DemoSession } from "@/server/auth/demo-session";
+import type { AuthenticatedServerAuthContext } from "@/server/auth/context";
 
 function publicRef(prefix: string, rawId: string) {
   const digest = createHash("sha256").update(rawId).digest("hex").slice(0, 10);
@@ -74,13 +74,13 @@ function actionLabel(action: string) {
   return labelFromKey(action);
 }
 
-export function toSessionDto(session: DemoSession) {
+export function toSessionDto(session: AuthenticatedServerAuthContext) {
   return {
-    mode: session.mode,
-    displayName: session.user.name,
-    initials: session.user.avatarInitials,
-    workspaceName: session.workspace.name,
-    roleName: session.role.name,
+    mode: "temporary-demo-session",
+    displayName: session.user.displayName,
+    initials: session.user.initials,
+    workspaceName: session.workspace.displayName,
+    roleName: session.role.displayName,
     isTemporaryDemoSession: true
   };
 }

@@ -14,7 +14,7 @@ export async function GET(request: Request, context: ProjectRouteContext) {
   return handleApiRequest(request, async ({ requestId }) => {
     const { projectId } = parseProjectParams(await context.params);
     const query = parseQuery(request, riskListQuerySchema);
-    const result = await withReadModels((readModels) => readModels.listRisks(projectId, query));
+    const result = await withReadModels(requestId, "risk.read", (readModels) => readModels.listRisks(projectId, query));
 
     return listResponse(result.data, {
       requestId,

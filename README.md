@@ -101,6 +101,7 @@ Deeper technical references:
 - [Database Runtime Readiness](docs/DATABASE_RUNTIME_READINESS.md)
 - [API Read-Only Foundation](docs/API_READONLY_FOUNDATION.md)
 - [API Exposure Hardening](docs/API_EXPOSURE_HARDENING.md)
+- [Auth/RBAC Boundary Foundation](docs/AUTH_RBAC_BOUNDARY.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
 - [API Contracts](docs/API_CONTRACTS.md)
 - [Security Model](docs/SECURITY_MODEL.md)
