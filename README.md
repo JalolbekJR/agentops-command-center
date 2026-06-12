@@ -103,6 +103,7 @@ Deeper technical references:
 - [API Exposure Hardening](docs/API_EXPOSURE_HARDENING.md)
 - [Auth/RBAC Boundary Foundation](docs/AUTH_RBAC_BOUNDARY.md)
 - [Auth Provider Integration Plan](docs/AUTH_PROVIDER_INTEGRATION_PLAN.md)
+- [Auth Provider Selection](docs/AUTH_PROVIDER_SELECTION.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
 - [API Contracts](docs/API_CONTRACTS.md)
 - [Security Model](docs/SECURITY_MODEL.md)
