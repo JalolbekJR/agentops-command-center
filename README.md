@@ -102,6 +102,7 @@ Deeper technical references:
 - [API Read-Only Foundation](docs/API_READONLY_FOUNDATION.md)
 - [API Exposure Hardening](docs/API_EXPOSURE_HARDENING.md)
 - [Auth/RBAC Boundary Foundation](docs/AUTH_RBAC_BOUNDARY.md)
+- [Auth Provider Integration Plan](docs/AUTH_PROVIDER_INTEGRATION_PLAN.md)
 - [Database Schema](docs/DATABASE_SCHEMA.md)
 - [API Contracts](docs/API_CONTRACTS.md)
 - [Security Model](docs/SECURITY_MODEL.md)
