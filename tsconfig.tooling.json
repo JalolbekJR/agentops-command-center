@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "incremental": false,
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "outDir": ".tooling-build",
+    "rootDir": ".",
+    "sourceMap": false,
+    "target": "ES2022",
+    "tsBuildInfoFile": ".tooling-build/tsconfig.tooling.tsbuildinfo"
+  },
+  "include": [
+    "scripts/seed-db.ts",
+    "src/data/mock-agents.ts",
+    "src/data/mock-approvals.ts",
+    "src/data/mock-audit-logs.ts",
+    "src/data/mock-built-in-agents.ts",
+    "src/data/mock-evaluations.ts",
+    "src/data/mock-plans.ts",
+    "src/data/mock-projects.ts",
+    "src/data/mock-risks.ts",
+    "src/data/mock-runs.ts",
+    "src/data/mock-users.ts",
+    "src/data/mock-workflows.ts",
+    "src/lib/rbac.ts",
+    "src/server/db/**/*.ts",
+    "src/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next", ".tooling-build"]
+}

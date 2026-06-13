@@ -6,9 +6,9 @@ This public document describes the database posture at a high level. Detailed ta
 
 ## What Phase 4B.1 Adds
 
-- Drizzle ORM and Drizzle Kit.
+- Drizzle ORM.
 - PostgreSQL driver support.
-- Migration generation and migration execution scripts.
+- Committed SQL migration execution.
 - Modular server-side schema files.
 - A server-only database connection factory.
 - Deterministic seed support for local verification.
@@ -53,19 +53,20 @@ Database commands require a local or approved hosted database connection supplie
 Useful local commands:
 
 ```powershell
-npm run db:generate
 npm run db:migrate
 npm run db:seed
 ```
 
 Run migration and seed commands only against a safe local database unless a hosted migration phase is explicitly approved.
 
+Migration generation is intentionally not exposed in the current public toolchain. Add future migrations as reviewed committed SQL plus compatible migration metadata in a dedicated backend phase.
+
 ## Security Posture
 
 - Keep database access server-only.
 - Keep secrets out of source control.
 - Use typed query builders for application queries.
-- Review generated migrations before applying them.
+- Review committed migrations before applying them.
 - Validate API inputs before database access.
 - Keep public API responses minimized through DTOs.
 - Treat client-side role switching as demo-only.

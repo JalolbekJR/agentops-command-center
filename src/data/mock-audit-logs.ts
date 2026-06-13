@@ -1,5 +1,5 @@
 import type { AuditLog } from "@/types/domain";
-import { activeProject } from "@/data/mock-projects";
+import { activeProject } from "./mock-projects";
 
 export const mockAuditLogs: AuditLog[] = [
   {

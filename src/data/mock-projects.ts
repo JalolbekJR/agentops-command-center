@@ -1,5 +1,5 @@
 import type { Project, ReleaseGate } from "@/types/domain";
-import { mockTeam } from "@/data/mock-users";
+import { mockTeam } from "./mock-users";
 
 export const mockProjects: Project[] = [
   {

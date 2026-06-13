@@ -99,6 +99,7 @@ Deeper technical references:
 - [Backend Implementation Plan](docs/BACKEND_IMPLEMENTATION_PLAN.md)
 - [Database Foundation](docs/DATABASE_FOUNDATION.md)
 - [Database Runtime Readiness](docs/DATABASE_RUNTIME_READINESS.md)
+- [Toolchain Security Hardening](docs/TOOLCHAIN_SECURITY_HARDENING.md)
 - [API Read-Only Foundation](docs/API_READONLY_FOUNDATION.md)
 - [API Exposure Hardening](docs/API_EXPOSURE_HARDENING.md)
 - [Auth/RBAC Boundary Foundation](docs/AUTH_RBAC_BOUNDARY.md)

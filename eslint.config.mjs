@@ -7,6 +7,7 @@ export default defineConfig([
   ...nextTs,
   globalIgnores([
     ".next/**",
+    ".tooling-build/**",
     "out/**",
     "build/**",
     "playwright-report/**",

@@ -1,17 +1,6 @@
 const baseUrl = process.env.BASE_URL ?? "http://localhost:3000";
 const request = globalThis.fetch;
 
-interface BoundaryFailure {
-  name: string;
-  reason: string;
-}
-
-interface JsonResponse {
-  status: number;
-  body: unknown;
-  contentType: string;
-}
-
 const forbiddenResponseTerms = [
   "internalUserId",
   "internalWorkspaceId",
@@ -38,13 +27,13 @@ const forbiddenResponseTerms = [
   "projectId",
   "email",
   "deterministic_seed"
-] as const;
+];
 
-function urlFor(path: string) {
+function urlFor(path) {
   return new URL(path, baseUrl).toString();
 }
 
-async function readJson(path: string): Promise<JsonResponse> {
+async function readJson(path) {
   const response = await request(urlFor(path), {
     method: "GET",
     headers: {
@@ -64,11 +53,11 @@ async function readJson(path: string): Promise<JsonResponse> {
   };
 }
 
-function bodyText(body: unknown) {
+function bodyText(body) {
   return JSON.stringify(body);
 }
 
-function hasMetaRequestId(body: unknown) {
+function hasMetaRequestId(body) {
   return (
     typeof body === "object" &&
     body !== null &&
@@ -80,7 +69,7 @@ function hasMetaRequestId(body: unknown) {
   );
 }
 
-function errorCode(body: unknown) {
+function errorCode(body) {
   if (
     typeof body === "object" &&
     body !== null &&
@@ -96,7 +85,7 @@ function errorCode(body: unknown) {
   return null;
 }
 
-function inspectExposure(name: string, body: unknown): BoundaryFailure[] {
+function inspectExposure(name, body) {
   const serialized = bodyText(body);
 
   return forbiddenResponseTerms
@@ -107,9 +96,9 @@ function inspectExposure(name: string, body: unknown): BoundaryFailure[] {
     }));
 }
 
-async function expectStatus(name: string, path: string, expectedStatus: number, expectedCode?: string) {
+async function expectStatus(name, path, expectedStatus, expectedCode) {
   const response = await readJson(path);
-  const failures: BoundaryFailure[] = [];
+  const failures = [];
 
   if (response.status !== expectedStatus) {
     failures.push({
@@ -138,7 +127,7 @@ async function expectStatus(name: string, path: string, expectedStatus: number, 
 }
 
 async function main() {
-  const failures: BoundaryFailure[] = [];
+  const failures = [];
 
   failures.push(...(await expectStatus("valid demo session read", "/api/session", 200)));
   failures.push(...(await expectStatus("valid project child read", "/api/projects/project_agentops/agents?limit=2", 200)));
@@ -162,10 +151,8 @@ async function main() {
   console.log("API auth boundary verification passed.");
 }
 
-main().catch((error: unknown) => {
+main().catch((error) => {
   console.error("API auth boundary verification failed.");
   console.error(error instanceof Error ? error.message : "unexpected error");
   process.exitCode = 1;
 });
-
-export {};

@@ -15,7 +15,7 @@ const routes = [
   "/api/projects/project_agentops/usage",
   "/api/workspaces/team_ai_factory/entitlements",
   "/api/workspaces/team_ai_factory/plan-limits"
-] as const;
+];
 
 const forbiddenTerms = [
   "user_admin",
@@ -37,18 +37,13 @@ const forbiddenTerms = [
   "projectId",
   "email",
   "deterministic_seed"
-] as const;
+];
 
-interface VerificationFailure {
-  route: string;
-  reason: string;
-}
-
-function urlFor(path: string) {
+function urlFor(path) {
   return new URL(path, baseUrl).toString();
 }
 
-async function readJson(route: string) {
+async function readJson(route) {
   const response = await request(urlFor(route), {
     method: "GET",
     headers: {
@@ -71,7 +66,7 @@ async function readJson(route: string) {
   return body;
 }
 
-function inspectBody(route: string, body: unknown): VerificationFailure[] {
+function inspectBody(route, body) {
   const serialized = JSON.stringify(body);
 
   return forbiddenTerms
@@ -83,13 +78,13 @@ function inspectBody(route: string, body: unknown): VerificationFailure[] {
 }
 
 async function main() {
-  const failures: VerificationFailure[] = [];
+  const failures = [];
 
   for (const route of routes) {
     try {
       const body = await readJson(route);
       failures.push(...inspectBody(route, body));
-    } catch (error: unknown) {
+    } catch (error) {
       failures.push({
         route,
         reason: error instanceof Error ? error.message : "request failed"
@@ -111,10 +106,8 @@ async function main() {
   console.log(`API exposure verification passed for ${routes.length} read-only routes.`);
 }
 
-main().catch((error: unknown) => {
+main().catch((error) => {
   console.error("API exposure verification failed.");
   console.error(error instanceof Error ? error.message : "unexpected error");
   process.exitCode = 1;
 });
-
-export {};
